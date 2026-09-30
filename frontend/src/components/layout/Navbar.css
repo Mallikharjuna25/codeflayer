@@ -1,0 +1,679 @@
+/* -------------------------------------------------------------------------
+   OPENAI-STYLE MINIMALIST NAVBAR FOR HALO
+   Matching the reference navigation, login button, and support button
+-------------------------------------------------------------------------- */
+
+.openai-nav-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: rgba(3, 5, 12, 0.82);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.openai-nav-container {
+  max-width: 1540px;
+  margin: 0 auto;
+  padding: 0.85rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .openai-nav-container {
+    padding: 0.85rem 1.25rem;
+  }
+}
+
+/* Left Group */
+.openai-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+}
+
+.halo-wordmark-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.halo-wordmark {
+  font-family: var(--font-heading, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  color: #ffffff;
+  transition: opacity 0.2s ease;
+}
+
+.halo-wordmark:hover {
+  opacity: 0.85;
+}
+
+/* Nav Links */
+.openai-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (max-width: 1080px) {
+  .openai-nav-links {
+    display: none;
+  }
+}
+
+.openai-link {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #e2e8f0;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem 0.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.2s ease;
+}
+
+.openai-link:hover {
+  color: #ffffff;
+}
+
+.openai-link.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.btn-link {
+  font-family: inherit;
+}
+
+.openai-icon-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem;
+  border-radius: 6px;
+  transition: color 0.2s;
+}
+
+.openai-icon-btn:hover {
+  color: #ffffff;
+}
+
+/* Products Dropdown */
+.nav-dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.dropdown-chevron {
+  transition: transform 0.2s ease;
+  color: #94a3b8;
+}
+
+.dropdown-chevron.open {
+  transform: rotate(180deg);
+}
+
+.openai-products-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  width: 360px;
+  background: rgba(10, 14, 28, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.1);
+  backdrop-filter: blur(24px);
+  z-index: 100;
+  animation: dropdownFade 0.2s ease-out;
+}
+
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-header-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
+}
+
+.dropdown-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dropdown-item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  flex-shrink: 0;
+}
+
+.dropdown-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.dropdown-item-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.dropdown-item-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.dropdown-item-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+}
+
+.dropdown-item-desc {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* Right Action Buttons (Exact OpenAI visual match) */
+.openai-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+/* Telemetry badge */
+.nav-sla-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.76rem;
+  font-family: var(--font-mono, monospace);
+  color: #94a3b8;
+}
+
+@media (max-width: 640px) {
+  .nav-sla-badge {
+    display: none;
+  }
+}
+
+.status-indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.status-indicator-dot.online {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+.status-indicator-dot.offline {
+  background: #f43f5e;
+}
+
+/* Support Button */
+.openai-support-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.openai-support-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 640px) {
+  .openai-support-btn {
+    display: none;
+  }
+}
+
+/* Log In Button (Exact OpenAI rounded dark pill) */
+.openai-login-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1.05rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.openai-login-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Try Halo CTA Button (Exact OpenAI white pill with black text and arrow) */
+.openai-try-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.15rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #000000;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.openai-try-btn:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3);
+}
+
+/* Mobile Toggle */
+.openai-mobile-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  padding: 0.4rem;
+  cursor: pointer;
+}
+
+@media (max-width: 1080px) {
+  .openai-mobile-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Mobile Menu */
+.openai-mobile-menu {
+  background: rgba(8, 12, 24, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mobile-item {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.8px;
+}
+
+.mobile-sub-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+
+.mobile-pill {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.mobile-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0.4rem 0;
+}
+
+.mobile-auth-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.mobile-login-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mobile-try-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #000000;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+/* Quick Search Dropdown */
+.openai-search-bar {
+  background: rgba(10, 14, 28, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.85rem 2rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.search-bar-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+}
+
+.search-bar-inner input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 0.92rem;
+}
+
+.search-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+/* -------------------------------------------------------------------------
+   MODAL STYLES (Login & Support)
+-------------------------------------------------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1.5rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.openai-modal-card {
+  max-width: 480px;
+  width: 100%;
+  border-radius: 24px;
+  background: #090d1f;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 2.25rem;
+  box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.9);
+  animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.modal-brand-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.modal-logo {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.modal-sub {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #38bdf8;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 6px;
+  transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+  color: #ffffff;
+}
+
+.modal-desc {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  line-height: 1.55;
+  margin-bottom: 1.5rem;
+}
+
+.login-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.login-opt-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-opt-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.login-opt-btn.primary {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.login-opt-btn.primary:hover {
+  background: rgba(56, 189, 248, 0.2);
+}
+
+.modal-footer-strip {
+  font-size: 0.74rem;
+  color: #64748b;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 1rem;
+}
+
+.support-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 500px) {
+  .support-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.support-grid-card {
+  padding: 1.25rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.support-grid-card:hover {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.3);
+  transform: translateY(-2px);
+}
+
+.support-grid-card h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.35rem;
+}
+
+.support-grid-card p {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+}
+
+.support-card-link {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.support-contact-box {
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.contact-label {
+  color: #94a3b8;
+}

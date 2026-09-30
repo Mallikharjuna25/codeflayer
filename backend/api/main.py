@@ -1,4 +1,5 @@
 import sys
+import time
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field
@@ -8,6 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, status, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,11 +18,26 @@ from core.llm_client import call_llm
 from core.rag import retrieve, ingest_knowledge, get_chroma_collection
 from core.extraction import extract_structured_data
 from core.safety_scaffold import scan_for_flags
+from core.database import init_db, SessionLocal
+from core.seed import seed_database
+from api.governance_routes import router as governance_router
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Initialize database tables and seed records
+    init_db()
+    db = SessionLocal()
+    try:
+        seed_database(db)
+    finally:
+        db.close()
+    yield
 
 app = FastAPI(
-    title="CODE_STORM AI Platform API",
-    version="1.0.0",
-    description="Resilient dual-provider LLM API with Chroma RAG and multimodal extraction."
+    title="Halo AI Governance Platform API",
+    version="2.0.0",
+    description="Enterprise company policy dashboard connected to an autonomous agent execution governor.",
+    lifespan=lifespan
 )
 
 app.add_middleware(
@@ -30,6 +47,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(governance_router)
 
 class QueryRequest(BaseModel):
     query: str = Field(..., min_length=1, description="User query or task")
@@ -58,6 +77,39 @@ class ExtractResponse(BaseModel):
 @app.get("/health")
 def health_check():
     return {"status": "ok", "service": "code_storm_backend"}
+
+class SafetyScanRequest(BaseModel):
+    query: str = Field(..., min_length=1)
+
+class SafetyScanResponse(BaseModel):
+    is_flagged: bool
+    trigger: Optional[str] = None
+    category: Optional[str] = None
+    execution_time_ms: float
+    message: str
+
+@app.post("/api/safety/scan", response_model=SafetyScanResponse)
+def safety_scan_endpoint(req: SafetyScanRequest):
+    """Direct, sub-millisecond Tier 0 safety scan without running downstream LLMs."""
+    start_time = time.perf_counter()
+    is_flagged, trigger = scan_for_flags(req.query)
+    elapsed_ms = round((time.perf_counter() - start_time) * 1000, 3)
+
+    if is_flagged:
+        return SafetyScanResponse(
+            is_flagged=True,
+            trigger=trigger,
+            category="Threat Intercepted at Tier-0",
+            execution_time_ms=elapsed_ms,
+            message=f"Security/Policy violation triggered: '{trigger}'"
+        )
+    return SafetyScanResponse(
+        is_flagged=False,
+        trigger=None,
+        category="Clean",
+        execution_time_ms=elapsed_ms,
+        message="Clean prompt. Tier-0 scan passed successfully."
+    )
 
 @app.post("/api/process", response_model=QueryResponse)
 def process_user_query(req: QueryRequest):

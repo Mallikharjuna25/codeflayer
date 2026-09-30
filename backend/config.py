@@ -68,5 +68,16 @@ MAX_RETRIES_PER_MODEL = int(os.getenv("MAX_RETRIES_PER_MODEL", "2"))
 # ---------------------------------------------------------------------------
 CHROMA_DIR = BASE_DIR / "chroma_store"
 KNOWLEDGE_DIR = BASE_DIR / "data" / "knowledge"
+POLICIES_STORAGE_DIR = BASE_DIR / "data" / "policies"
+REPORTS_STORAGE_DIR = BASE_DIR / "data" / "reports"
+DEMO_DB_PATH = BASE_DIR / "data" / "demo_business.db"
 CHROMA_COLLECTION_NAME = "code_storm_knowledge"
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
+
+# ---------------------------------------------------------------------------
+# Database & Authentication
+# ---------------------------------------------------------------------------
+DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'data' / 'governance.db'}")
+JWT_SECRET = os.getenv("JWT_SECRET", "halo-super-secret-governor-key-change-in-production-2026")
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRY_MINUTES = 60 * 12

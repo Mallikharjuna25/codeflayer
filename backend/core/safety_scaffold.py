@@ -12,7 +12,34 @@ from config import logger
 # Example for EdTech: [r"\b(cheat|exam leak|plagiarize)\b"]
 # ---------------------------------------------------------------------------
 DEFAULT_RED_FLAG_PATTERNS: List[str] = [
-    # FILL IN ONCE PROBLEM STATEMENT IS KNOWN
+    # 1. Prompt Injection & Jailbreak Attacks
+    r"\bignore\s+(all\s+)?(prior|previous|above|system)\s+instructions\b",
+    r"\bdisregard\s+(all\s+)?(prior|previous|above|system|safety|security)\s+(instructions|rules|prompts|guidelines)\b",
+    r"\bforget\s+(all\s+)?(prior|previous)\s+instructions\b",
+    r"\b(output|reveal|print|show|leak|display)\s+(the\s+)?(system|hidden|internal)\s+(prompt|instructions|rules)\b",
+    r"\b(you\s+are\s+now|act\s+as|switch\s+to)\s+(dan|jailbreak|unrestricted|god\s+mode|chaos\s+gpt)\b",
+    r"\bjailbreak\b",
+    r"\boverride\s+(system|security|policy|governance|safety|guardrails)\b",
+    r"\bdo\s+anything\s+now\b",
+
+    # 2. SQL Injection & Database Exploits
+    r"\bdrop\s+(table|database|view|index|schema)\b",
+    r"\btruncate\s+(table)?\b",
+    r"\bdelete\s+from\s+[a-zA-Z0-9_]+\b",
+    r"\bunion\s+(all\s+)?select\b",
+    r"\b(or|and)\s+['\"]?1['\"]?\s*=\s*['\"]?1['\"]?",
+    r"\bexec(ute)?\s*\(\s*['\"]",
+
+    # 3. Security, Token & Privilege Exploitation
+    r"\bbypass\s+(security|token|auth|authentication|governance|policy|guardrail|firewall)\b",
+    r"\bbypass\s+security\s+token\b",
+    r"\bescalate\s+privilege(s)?\b",
+    r"\bgrant\s+admin\b",
+    r"\b(dump|leak|steal|extract)\s+(passwords?|credentials?|secrets?|keys?|tokens?|hash)\b",
+
+    # 4. Sensitive Data Exfiltration
+    r"\b(export|dump|exfiltrate)\s+(all\s+)?(users|database|passwords|credit\s+cards|ssn)\b",
+    r"\bapi[_-]?key\s*[:=]\s*['\"][a-zA-Z0-9_-]{16,}['\"]",
 ]
 
 DEFAULT_CLASSIFICATION_PROMPT = """You are a real-time safety and triage classifier.
@@ -33,7 +60,7 @@ def scan_for_flags(text: str, patterns: List[str] = None) -> Tuple[bool, str]:
 
     normalized = text.lower().strip()
     for pattern in active_patterns:
-        match = re.search(pattern, normalized)
+        match = re.search(pattern, normalized, re.IGNORECASE)
         if match:
             trigger = match.group(0)
             logger.warning(f"Tier 0 Safety Flag triggered: '{trigger}'")

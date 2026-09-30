@@ -1,0 +1,119 @@
+/* -------------------------------------------------------------------------
+   REACT BITS COMPONENT STYLES - DEEP SPACE CELESTIAL THEME
+-------------------------------------------------------------------------- */
+
+/* SpotlightCard */
+.spotlight-card {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+  background: var(--bg-card, rgba(13, 18, 36, 0.75));
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.spotlight-card:hover {
+  border-color: var(--border-highlight, rgba(56, 189, 248, 0.45));
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.2);
+}
+
+.spotlight-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.spotlight-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+}
+
+/* ShinyText */
+.shiny-text {
+  background: linear-gradient(
+    120deg,
+    #ffffff 0%,
+    var(--shimmer-color, #38bdf8) 45%,
+    #c084fc 80%,
+    #ffffff 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  animation: shine var(--animation-duration, 4s) linear infinite;
+}
+
+.shiny-text.disabled {
+  animation: none;
+  background: none;
+  -webkit-text-fill-color: inherit;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* DecryptedText */
+.decrypted-wrapper {
+  display: inline-block;
+  cursor: default;
+}
+
+.decrypted-scramble {
+  color: #38bdf8;
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
+/* StarBorder */
+.star-border-container {
+  position: relative;
+  display: inline-block;
+  padding: 1.5px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: transparent;
+}
+
+.star-border-gradient {
+  position: absolute;
+  width: 300%;
+  height: 300%;
+  top: -100%;
+  left: -100%;
+  animation: starRotate linear infinite;
+  z-index: 0;
+}
+
+@keyframes starRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.star-border-inner {
+  position: relative;
+  background: linear-gradient(135deg, #1e3a8a, #7c3aed);
+  border-radius: 11px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+

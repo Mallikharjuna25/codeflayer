@@ -1,0 +1,260 @@
+/* -------------------------------------------------------------------------
+   SPIRAL GALAXY HERO - OPENAI AESTHETIC FOR HALO
+   Rotating dual-arm cosmic particle swirl, glowing core, flank typography
+-------------------------------------------------------------------------- */
+
+.spiral-galaxy-hero-container {
+  position: relative;
+  width: 100%;
+  min-height: clamp(600px, 82vh, 850px);
+  background: #03050c;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.6) 0%, #03050c 100%),
+    radial-gradient(circle at 20% 20%, rgba(30, 58, 138, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.12) 0%, transparent 50%);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 30px 90px -20px rgba(0, 0, 0, 0.95),
+    0 0 60px -15px rgba(56, 189, 248, 0.2);
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+}
+
+.galaxy-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------
+   Center Content Stage with Flank Typography (GPT / Astra layout)
+-------------------------------------------------------------------------- */
+.galaxy-hero-content-stage {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 4rem 3rem 2rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .galaxy-hero-content-stage {
+    flex-direction: column;
+    padding: 3rem 1.5rem 1.5rem 1.5rem;
+    gap: 2rem;
+    justify-content: center;
+  }
+}
+
+.galaxy-flank-text {
+  display: flex;
+  flex-direction: column;
+  max-width: 380px;
+}
+
+.galaxy-flank-text.flank-left {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.galaxy-flank-text.flank-right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .galaxy-flank-text.flank-left,
+  .galaxy-flank-text.flank-right {
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
+  }
+}
+
+.hero-flank-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  margin-bottom: 0.85rem;
+}
+
+.hero-flank-badge.badge-purple {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.35);
+  color: #c084fc;
+}
+
+/* Huge Minimalist Font (Exactly matching GPT / Astra on OpenAI page) */
+.flank-huge-title {
+  font-family: var(--font-heading, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-size: clamp(3.2rem, 8vw, 6.5rem);
+  font-weight: 500;
+  letter-spacing: -2px;
+  line-height: 1;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.flank-huge-title.glow-cyan {
+  text-shadow: 0 0 35px rgba(255, 255, 255, 0.45), 0 0 70px rgba(56, 189, 248, 0.3);
+}
+
+.flank-huge-title.glow-purple {
+  text-shadow: 0 0 35px rgba(255, 255, 255, 0.45), 0 0 70px rgba(168, 85, 247, 0.35);
+}
+
+.flank-tagline {
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  color: #94a3b8;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+}
+
+/* Center Interactive Pill */
+.galaxy-center-hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.galaxy-interaction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.95rem;
+  border-radius: 9999px;
+  background: rgba(13, 18, 36, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  color: #cbd5e1;
+  font-size: 0.76rem;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  opacity: 0.85;
+  transition: all 0.25s ease;
+}
+
+.spiral-galaxy-hero-container:hover .galaxy-interaction-pill {
+  opacity: 1;
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  transform: scale(1.05);
+}
+
+/* -------------------------------------------------------------------------
+   Quote Dock (Bottom Area of Galaxy)
+-------------------------------------------------------------------------- */
+.galaxy-quote-dock {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 2.5rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  background: linear-gradient(to top, rgba(3, 5, 12, 0.9) 0%, rgba(3, 5, 12, 0) 100%);
+}
+
+.galaxy-quote-text {
+  font-family: var(--font-heading, sans-serif);
+  font-size: clamp(1.35rem, 2.5vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  line-height: 1.25;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+}
+
+.galaxy-quote-sub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  font-size: clamp(0.85rem, 1.2vw, 0.98rem);
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.quote-product {
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.quote-sep {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.galaxy-purpose-strip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(8px);
+}
+
+/* -------------------------------------------------------------------------
+   Bottom-Right Replay Button (Exact OpenAI visual match)
+-------------------------------------------------------------------------- */
+.galaxy-replay-btn {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(20, 24, 40, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+}
+
+.galaxy-replay-btn:hover {
+  background: rgba(30, 38, 64, 0.95);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #ffffff;
+  transform: rotate(90deg) scale(1.08);
+}
