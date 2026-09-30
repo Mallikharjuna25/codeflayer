@@ -22,11 +22,7 @@ def extract_structured_data(
     mime_type: str = "image/png",
     custom_system_prompt: Optional[str] = None
 ) -> ExtractionResult:
-    """
-    Extracts structured data from text or image input and validates against a Pydantic schema.
-    If schema validation fails, retries exactly ONCE with the validation error injected.
-    If it fails twice, gracefully returns raw text instead of crashing.
-    """
+    """Extracts structured data with 1-attempt validation feedback retry."""
     schema_json_desc = json.dumps(schema.model_json_schema(), indent=2)
     default_system = (
         "You are a strict data extraction engine. Extract information matching the following JSON schema:\n"
@@ -36,7 +32,6 @@ def extract_structured_data(
     system_prompt = custom_system_prompt or default_system
     user_prompt = text or "Extract the required structured fields from the attached image strictly according to the schema."
 
-    # Attempt 1
     res1 = call_llm(
         system_prompt=system_prompt,
         user_prompt=user_prompt,
@@ -65,7 +60,6 @@ def extract_structured_data(
         last_val_err = str(val_err1)
         logger.warning(f"Schema validation failed on attempt 1: {last_val_err}. Retrying once with error feedback...")
 
-    # Attempt 2: Feedback retry
     retry_prompt = (
         f"{user_prompt}\n\n"
         "ATTENTION: Your previous JSON output was invalid according to the schema.\n"

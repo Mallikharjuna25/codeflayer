@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field
 
-# Ensure starter kit root is on sys.path
+# Ensure backend root is on sys.path
 BASE_DIR = Path(__file__).resolve().parent.parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
@@ -11,15 +11,16 @@ if str(BASE_DIR) not in sys.path:
 from fastapi import FastAPI, HTTPException, status, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 
+from config import KNOWLEDGE_DIR
 from core.llm_client import call_llm
-from core.rag import retrieve, ingest_knowledge
+from core.rag import retrieve, ingest_knowledge, get_chroma_collection
 from core.extraction import extract_structured_data
 from core.safety_scaffold import scan_for_flags
 
 app = FastAPI(
-    title="GenAI Hackathon Starter API",
+    title="CODE_STORM AI Platform API",
     version="1.0.0",
-    description="Domain-agnostic resilient API with dual-provider LLM cascade & Chroma RAG."
+    description="Resilient dual-provider LLM API with Chroma RAG and multimodal extraction."
 )
 
 app.add_middleware(
@@ -56,11 +57,11 @@ class ExtractResponse(BaseModel):
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "service": "hackathon-starter-api"}
+    return {"status": "ok", "service": "code_storm_backend"}
 
 @app.post("/api/process", response_model=QueryResponse)
 def process_user_query(req: QueryRequest):
-    """Orchestrates Tier 0 safety scan, Chroma vector retrieval, and LLM synthesis."""
+    """Tier 0 safety scan, Chroma vector retrieval, and LLM synthesis."""
     # 1. Tier 0 Safety Scan
     is_flagged, trigger = scan_for_flags(req.query)
     if is_flagged:
@@ -116,3 +117,16 @@ def extract_image_endpoint(file: UploadFile = File(...)):
     if res.success and res.validated:
         return ExtractResponse(status="success", extracted=res.validated.model_dump())
     return ExtractResponse(status="failed", error=res.error)
+
+@app.post("/api/rag/ingest")
+def trigger_rag_ingest():
+    """Triggers re-indexing of data/knowledge/ documents into local ChromaDB."""
+    count = ingest_knowledge(str(KNOWLEDGE_DIR))
+    return {"status": "success", "chunks_ingested": count}
+
+@app.get("/api/rag/stats")
+def get_rag_stats():
+    """Returns vector store metrics and count of indexed chunks."""
+    coll = get_chroma_collection()
+    count = coll.count() if coll else 0
+    return {"status": "ok", "total_chunks": count}

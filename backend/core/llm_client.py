@@ -37,12 +37,10 @@ def _clean_and_heal_json(raw_text: str) -> tuple[bool, Optional[Dict[str, Any]],
     Fails loud if valid JSON cannot be restored to protect data correctness.
     """
     text = raw_text.strip()
-    # Strip markdown block if present
     match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", text)
     if match:
         text = match.group(1).strip()
 
-    # Pass 1: Standard parse
     try:
         data = json.loads(text)
         if isinstance(data, dict):
@@ -51,7 +49,6 @@ def _clean_and_heal_json(raw_text: str) -> tuple[bool, Optional[Dict[str, Any]],
     except json.JSONDecodeError:
         pass
 
-    # Pass 2: Single conservative heuristic repair for truncated closing brace
     repaired = text.rstrip()
     if not repaired.endswith("}"):
         last_brace = repaired.rfind("}")
@@ -81,9 +78,7 @@ def call_llm(
     Executes an LLM call across Groq with automatic cascade to Gemini.
     Retries only on transient errors (429/503/timeout), with capped backoff.
     """
-    # -----------------------------------------------------------------------
     # 1. Tier 1: Groq Cascade
-    # -----------------------------------------------------------------------
     if GROQ_API_KEY:
         try:
             from groq import Groq
@@ -93,7 +88,6 @@ def call_llm(
             for model_id in groq_model_list:
                 for attempt in range(MAX_RETRIES_PER_MODEL):
                     try:
-                        # Construct content (text or multimodal)
                         if image_bytes:
                             b64 = base64.b64encode(image_bytes).decode("utf-8")
                             user_content = [
@@ -154,9 +148,7 @@ def call_llm(
         except Exception as client_err:
             logger.warning(f"Groq client init failed: {client_err}")
 
-    # -----------------------------------------------------------------------
     # 2. Tier 2: Gemini Cascade Fallback
-    # -----------------------------------------------------------------------
     if GEMINI_API_KEY:
         try:
             from google import genai
@@ -228,9 +220,7 @@ def call_llm(
         except Exception as g_client_err:
             logger.warning(f"Gemini client init failed: {g_client_err}")
 
-    # -----------------------------------------------------------------------
     # 3. Complete Provider Exhaustion
-    # -----------------------------------------------------------------------
     logger.critical("All provider endpoints exhausted. Failing soft with SERVICE_UNAVAILABLE.")
     return LLMResult(
         success=False,

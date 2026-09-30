@@ -1,9 +1,29 @@
+# Environment & Secrets
 .env
-chroma_store/
+backend/.env
+frontend/.env
+*.env
+
+# Python & Virtual Environments
+.venv/
+env/
+venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .pytest_cache/
 *.db
-.venv/
+
+# Node & Frontend
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+.vite/
+frontend/.vite/
+
+# Vector Stores & Caches
+chroma_store/
+backend/chroma_store/
+.chroma/

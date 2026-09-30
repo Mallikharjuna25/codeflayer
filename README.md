@@ -1,77 +1,85 @@
-# ⚡ GenAI & LLM Hackathon Starter Kit (36-Hour Ready)
+# ⚡ CODE_STORM — Full-Stack GenAI Hackathon Platform
 
-A battle-tested, domain-agnostic scaffold designed for fast-paced GenAI hackathons where problem statements are revealed on the spot.
-
----
-
-## 🏗️ Architecture & Plumbing
-
-1. **Multi-Provider LLM Cascade (`core/llm_client.py`)**:
-   - **Tier 1:** Groq (`qwen/qwen3.8-27b`, `openai/gpt-oss-120b`, `llama-3.3-70b-versatile`) for sub-second responses.
-   - **Vision Tier:** Dedicated `GROQ_VISION_MODELS` ensures image prompts only target vision-capable models.
-   - **Tier 2 Fallback:** Google Gemini (`gemini-3.5-flash`, `gemini-flash-latest`, `gemini-3.1-flash-lite`, `gemini-3.8-flash`) on 429/503/timeouts.
-   - **On-the-Fly Overrides:** Override any model cascade directly in `.env` without modifying code (e.g. `GROQ_MODELS=llama-3.3-70b-versatile,qwen/qwen3.8-27b`).
-   - **Safe Credentials:** Dummy/placeholder keys (like `gsk_your_...`) are automatically sanitized to prevent 401 auth crashes.
-   - **JSON Mode & Healing:** Provider-level JSON enforcement + automated markdown fence removal and truncated brace repair.
-   - **Fail-soft Availability:** Returns `SERVICE_UNAVAILABLE` when all endpoints are down—never crashes the application.
-2. **Local RAG Pipeline (`core/rag.py`)**:
-   - Local embeddings with `all-MiniLM-L6-v2` via `sentence-transformers` (zero API dependencies for vector indexing).
-   - Local ChromaDB vector store with cosine distance filtering (`max_distance=0.70`).
-3. **Structured Extraction (`core/extraction.py`)**:
-   - Multimodal (Text or Image) schema extraction into validated Pydantic models.
-   - Automatic 1-attempt feedback retry on schema validation failure.
-4. **Two-Tier Safety Guardrails (`core/safety_scaffold.py`)**:
-   - **Tier 0:** Fast (<5ms) regex/keyword scanner before any model or DB call.
-   - **Tier 1:** Semantic LLM-based policy/triage classifier.
-5. **Dual Presentation Shell**:
-   - **Streamlit (`app.py`)**: Interactive UI with Chat, Extraction, and Knowledge Ingestion tabs.
-   - **FastAPI (`api/main.py`)**: REST backend with `/health`, `/api/process`, `/api/extract`, and `/api/extract/image`.
+A high-performance, enterprise-grade GenAI application scaffold built for 36-hour hackathons. Features a modern **React (Vite + Vanilla CSS)** frontend, a **FastAPI** backend, **ChromaDB** local vector search, and a zero-downtime **Groq + Gemini multi-provider cascade**.
 
 ---
 
-## 🚀 Quickstart
+## 🏛️ Project Structure
 
-### 1. Configure Environment
-```bash
-cp .env.example .env
-# Edit .env with your GROQ_API_KEY and GEMINI_API_KEY
+```
+CODE_STORM/
+├── backend/
+│   ├── api/
+│   │   └── main.py              # FastAPI endpoints (/health, /api/process, /api/extract, /api/rag/*)
+│   ├── core/
+│   │   ├── llm_client.py        # Dual Groq + Gemini resilience cascade (retries, timeouts, JSON healing)
+│   │   ├── rag.py               # Local ChromaDB vector retrieval (sentence-transformers all-MiniLM-L6-v2)
+│   │   ├── extraction.py        # Pydantic structured extraction (text & image) with feedback retry
+│   │   └── safety_scaffold.py   # Two-tier safety guards (Tier 0 regex + Tier 1 semantic)
+│   ├── data/
+│   │   └── knowledge/           # Drop domain documents (.md / .txt) here
+│   ├── tests/                   # Pytest test suite (10/10 passing)
+│   ├── config.py                # Model cascades & API key sanitizer
+│   ├── requirements.txt         # Python dependencies
+│   └── .env.example
+│
+├── frontend/                    # Pure React + Vite + Vanilla CSS (zero external bloat)
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx       # Real-time backend status pulse & active model badges
+│   │   │   ├── ChatTab.jsx      # AI Assistant chat thread with source grounding citations
+│   │   │   ├── ExtractTab.jsx   # Drag & drop image/text structured extractor & JSON viewer
+│   │   │   └── KnowledgeTab.jsx # Knowledge base chunk stats & 1-click re-indexing
+│   │   ├── App.jsx              # Tab navigation & layout
+│   │   ├── App.css              # Custom Vanilla CSS: Glassmorphism, sleek dark mode, glow effects
+│   │   ├── index.css            # Typography & design tokens
+│   │   └── main.jsx
+│   ├── package.json             # Minimal dependencies: standard React + Vite only
+│   └── vite.config.js
+│
+├── .gitignore                   # Ignores .env, node_modules/, chroma_store/, .venv/
+├── README.md                    # Project pitch, architecture & domain pivot guide
+└── SETUP_INSTRUCTIONS.md        # Step-by-step teammate guide with exact links & terminal outputs
 ```
 
-### 2. Run Streamlit UI
-```bash
-streamlit run app.py
-```
+---
 
-### 3. Run FastAPI Backend
+## 🚀 Quick Run Commands
+
+See **[SETUP_INSTRUCTIONS.md](file:///d:/Python/project/eldercare-copilot/hackathon_starter_kit/SETUP_INSTRUCTIONS.md)** for a step-by-step guide with expected terminal outputs and API key setup.
+
+### 1. Start Backend (Terminal 1)
 ```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate   # On Windows
+pip install -r requirements.txt
 uvicorn api.main:app --reload --port 8000
 ```
 
-### 4. Run Test Suite
+### 2. Start Frontend (Terminal 2)
 ```bash
-pytest -v
+cd frontend
+npm install
+npm run dev
 ```
+Open **`http://localhost:5173`** in your browser.
 
 ---
 
-## 🎯 DOMAIN LOGIC GOES HERE (Fill In Once PS is Revealed)
+## 🎯 4-Step Hackathon Pivot (When Problem Statement Drops)
 
-When the hackathon problem statement is announced, you only need to modify these 4 areas (plumbing is already done):
+When the problem statement is announced, do not touch the plumbing. Only update these 4 spots:
 
-1. **Domain Knowledge (`data/knowledge/`)**:
-   - Drop your domain documents (`.md` or `.txt`) into `data/knowledge/`.
-   - Click **"Ingest / Refresh Knowledge Base"** in the Streamlit sidebar.
-2. **Safety Patterns (`core/safety_scaffold.py`)**:
-   - Add regex strings to `DEFAULT_RED_FLAG_PATTERNS` (e.g. medical emergencies, credit card fraud keywords, exam leaks).
-   - Customize `DEFAULT_CLASSIFICATION_PROMPT` for semantic checks.
-3. **Extraction Schema (`app.py` or `api/main.py`)**:
-   - Replace `GenericItemSchema` with your domain's Pydantic model (e.g., `InvoiceSchema`, `PrescriptionSchema`, `ResumeSchema`).
-4. **Agent Persona (`app.py` line 77 or `api/main.py` line 67)**:
-   - Update `system_prompt` with domain-specific role and guidelines (e.g., "You are an empathetic cardiac recovery copilot...").
+1. **Knowledge Documents:** Drop problem statement guidelines (`.md`/`.txt`) into `backend/data/knowledge/` and click *"Re-Index"* in the web UI.
+2. **Safety Scanner:** In `backend/core/safety_scaffold.py`, add 3–5 domain regex words into `DEFAULT_RED_FLAG_PATTERNS`.
+3. **Pydantic Schema:** In `backend/api/main.py` line 43, update `DefaultExtractSchema` with the fields you need to extract.
+4. **Assistant Persona:** In `backend/api/main.py` line 78, tune `system_prompt` to fit the domain's persona.
 
 ---
 
 ## 🏆 Pitch Day Talking Points
-- **Resilience:** "We engineered a zero-downtime architecture: high-speed Groq with automatic fallback to Gemini, preventing any live demo crash."
-- **Data Correctness:** "We enforce strict Pydantic validation with automatic feedback loops—the system fails loud on corrupted data rather than guessing."
-- **Privacy & Latency:** "Embeddings are calculated locally with sentence-transformers; document search never leaves the server."
+- **Zero Downtime Resilience:** High-speed Groq inference (`qwen/qwen3.8-27b`) with automatic failover to Google Gemini (`gemini-3.5-flash`), eliminating live demo crashes.
+- **Data Correctness:** Pydantic schema validation with automatic 1-attempt feedback correction—the system fails loud on corrupted data rather than guessing.
+- **Privacy & Latency:** Embeddings are calculated locally with `all-MiniLM-L6-v2`; document retrieval never leaves the server.
+- **Modern Full-Stack Design:** Decoupled FastAPI backend and lightning-fast (<200ms) React frontend with pure Vanilla CSS.

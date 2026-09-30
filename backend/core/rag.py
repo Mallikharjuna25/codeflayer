@@ -50,7 +50,6 @@ def _chunk_text(content: str, filename: str, chunk_size: int = 600, overlap: int
                 chunks.append({"source_file": filename, "text": text})
         return chunks
 
-    # Sliding window fallback for plain text or unstructured docs
     start = 0
     while start < len(content):
         end = min(start + chunk_size, len(content))
@@ -61,10 +60,7 @@ def _chunk_text(content: str, filename: str, chunk_size: int = 600, overlap: int
     return chunks
 
 def ingest_knowledge(folder_path: str) -> int:
-    """
-    Reads all .md and .txt documents from the folder, chunks, and upserts idempotently.
-    Returns total chunks ingested. Never crashes on unreadable or empty paths.
-    """
+    """Reads all .md and .txt documents from folder, chunks, and upserts idempotently."""
     folder = Path(folder_path)
     if not folder.exists() or not folder.is_dir():
         logger.warning(f"Knowledge folder does not exist: {folder_path}")
@@ -106,13 +102,7 @@ def ingest_knowledge(folder_path: str) -> int:
     return len(ids)
 
 def retrieve(query: str, k: int = 4, max_distance: float = 0.70) -> List[Chunk]:
-    """
-    Queries Chroma for relevant chunks.
-    NOTE on distance metric: Chroma with hnsw:space='cosine' returns cosine distance.
-    Distance = 1.0 - cosine_similarity.
-    LOWER = MORE SIMILAR (0.0 = identical, 1.0 = orthogonal).
-    Returns an empty list if the best match exceeds max_distance (prevents false matches).
-    """
+    """Queries Chroma for relevant chunks. Lower distance = more similar."""
     clean_q = query.strip()
     if not clean_q:
         return []
@@ -139,7 +129,6 @@ def retrieve(query: str, k: int = 4, max_distance: float = 0.70) -> List[Chunk]:
     if not docs:
         return []
 
-    # If even the top/closest match exceeds max_distance, refuse to return weak hallucinations
     if dists[0] > max_distance:
         logger.info(f"Best match distance ({dists[0]:.3f}) exceeds threshold ({max_distance}). Suppressing.")
         return []

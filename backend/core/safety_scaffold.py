@@ -26,11 +26,7 @@ Respond ONLY with a JSON object:
 }"""
 
 def scan_for_flags(text: str, patterns: List[str] = None) -> Tuple[bool, str]:
-    """
-    Tier 0 Deterministic Safety Check.
-    Ultra-fast (<5ms) regex scan executed before any vector search or LLM call.
-    Returns: (is_flagged: bool, matched_phrase: str)
-    """
+    """Tier 0 Deterministic Safety Check (<5ms regex scan)."""
     active_patterns = patterns if patterns is not None else DEFAULT_RED_FLAG_PATTERNS
     if not text or not active_patterns:
         return False, ""
@@ -49,12 +45,7 @@ def semantic_check(
     text: str,
     classification_prompt: str = DEFAULT_CLASSIFICATION_PROMPT
 ) -> Tuple[bool, str]:
-    """
-    Tier 1 Semantic Safety Check.
-    Uses LLM JSON mode for contextual classification (e.g. nuanced queries, idioms, vernacular).
-    Distinguishes provider failure (SERVICE_UNAVAILABLE) from clean responses.
-    Returns: (is_flagged: bool, reason: str)
-    """
+    """Tier 1 Semantic Safety Check via LLM JSON mode."""
     if not text or len(text.strip()) < 3:
         return False, ""
 
