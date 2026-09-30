@@ -19,28 +19,48 @@ logging.basicConfig(
 logger = logging.getLogger("hackathon_kit")
 
 # ---------------------------------------------------------------------------
-# API Credentials
+# API Credentials (with Placeholder Sanitizer)
 # ---------------------------------------------------------------------------
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "") or os.getenv("GOOGLE_API_KEY", "")
+def _clean_api_key(val: str) -> str:
+    """Detects and treats placeholder keys from .env.example as empty."""
+    cleaned = (val or "").strip()
+    if not cleaned or "your_" in cleaned.lower() or cleaned.startswith("gsk_your_") or cleaned.startswith("AIzaSy_your_"):
+        return ""
+    return cleaned
+
+GROQ_API_KEY = _clean_api_key(os.getenv("GROQ_API_KEY", ""))
+GEMINI_API_KEY = _clean_api_key(os.getenv("GEMINI_API_KEY", "") or os.getenv("GOOGLE_API_KEY", ""))
 
 # ---------------------------------------------------------------------------
 # Provider Model Cascades
-# NOTE: Verify these IDs against provider docs before the hackathon starts.
-# Free-tier model names update periodically; a stale model ID fails silently.
+# Can be overridden directly from .env without touching code, e.g.:
+#   GROQ_MODELS=llama-3.3-70b-versatile,qwen/qwen3.8-27b
 # ---------------------------------------------------------------------------
-GROQ_MODELS = [
-    "qwen/qwen3.8-27b",        # Fast, versatile, supports text + multimodal vision
-    "openai/gpt-oss-120b",     # Heavy reasoning fallback
-    "openai/gpt-oss-20b"       # Secondary lightweight fallback
-]
+def _env_list(name: str, default: list) -> list:
+    raw = os.getenv(name, "")
+    items = [x.strip() for x in raw.split(",") if x.strip()]
+    return items or default
 
-GEMINI_MODELS = [
-    "gemini-3.5-flash",        # Primary Google fast multimodal endpoint
+# Groq text models cascade
+GROQ_MODELS = _env_list("GROQ_MODELS", [
+    "qwen/qwen3.8-27b",        # Primary: fast, strong reasoning, multimodal support
+    "openai/gpt-oss-120b",     # Heavy reasoning fallback
+    "openai/gpt-oss-20b",      # Fast lightweight fallback
+    "llama-3.3-70b-versatile"  # High-reliability Llama fallback
+])
+
+# Groq models used specifically when an image is attached
+GROQ_VISION_MODELS = _env_list("GROQ_VISION_MODELS", [
+    "qwen/qwen3.8-27b"
+])
+
+# Gemini multimodal models cascade
+GEMINI_MODELS = _env_list("GEMINI_MODELS", [
+    "gemini-3.5-flash",        # Primary fast multimodal endpoint
     "gemini-flash-latest",     # Stable alias pointer
     "gemini-3.1-flash-lite",   # Low-latency speed tier
     "gemini-3.8-flash"         # Extended capabilities tier
-]
+])
 
 # ---------------------------------------------------------------------------
 # Resilience & Timeout Policies

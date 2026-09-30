@@ -1,16 +1,19 @@
 # ⚡ GenAI & LLM Hackathon Starter Kit (36-Hour Ready)
 
-A resilient, domain-agnostic scaffold designed for fast-paced GenAI hackathons where problem statements are revealed on the spot.
+A battle-tested, domain-agnostic scaffold designed for fast-paced GenAI hackathons where problem statements are revealed on the spot.
 
 ---
 
 ## 🏗️ Architecture & Plumbing
 
 1. **Multi-Provider LLM Cascade (`core/llm_client.py`)**:
-   - **Tier 1:** Groq (`qwen/qwen3.8-27b`) for sub-second, low-cost responses.
-   - **Tier 2 Fallback:** Google Gemini (`gemini-3.5-flash`, `gemini-flash-latest`) on 429/503/timeouts.
+   - **Tier 1:** Groq (`qwen/qwen3.8-27b`, `openai/gpt-oss-120b`, `llama-3.3-70b-versatile`) for sub-second responses.
+   - **Vision Tier:** Dedicated `GROQ_VISION_MODELS` ensures image prompts only target vision-capable models.
+   - **Tier 2 Fallback:** Google Gemini (`gemini-3.5-flash`, `gemini-flash-latest`, `gemini-3.1-flash-lite`, `gemini-3.8-flash`) on 429/503/timeouts.
+   - **On-the-Fly Overrides:** Override any model cascade directly in `.env` without modifying code (e.g. `GROQ_MODELS=llama-3.3-70b-versatile,qwen/qwen3.8-27b`).
+   - **Safe Credentials:** Dummy/placeholder keys (like `gsk_your_...`) are automatically sanitized to prevent 401 auth crashes.
    - **JSON Mode & Healing:** Provider-level JSON enforcement + automated markdown fence removal and truncated brace repair.
-   - **Fail-soft Availability:** Returns `SERVICE_UNAVAILABLE` when all endpoints are down—never crashes.
+   - **Fail-soft Availability:** Returns `SERVICE_UNAVAILABLE` when all endpoints are down—never crashes the application.
 2. **Local RAG Pipeline (`core/rag.py`)**:
    - Local embeddings with `all-MiniLM-L6-v2` via `sentence-transformers` (zero API dependencies for vector indexing).
    - Local ChromaDB vector store with cosine distance filtering (`max_distance=0.70`).
@@ -22,7 +25,7 @@ A resilient, domain-agnostic scaffold designed for fast-paced GenAI hackathons w
    - **Tier 1:** Semantic LLM-based policy/triage classifier.
 5. **Dual Presentation Shell**:
    - **Streamlit (`app.py`)**: Interactive UI with Chat, Extraction, and Knowledge Ingestion tabs.
-   - **FastAPI (`api/main.py`)**: REST backend with `/health`, `/api/process`, and `/api/extract`.
+   - **FastAPI (`api/main.py`)**: REST backend with `/health`, `/api/process`, `/api/extract`, and `/api/extract/image`.
 
 ---
 

@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 
 from core.llm_client import call_llm
@@ -97,8 +97,22 @@ def process_user_query(req: QueryRequest):
 
 @app.post("/api/extract", response_model=ExtractResponse)
 def extract_fields_endpoint(req: ExtractRequest):
-    """Generic structured extraction endpoint with feedback retry."""
+    """Generic structured extraction endpoint from text with feedback retry."""
     res = extract_structured_data(schema=DefaultExtractSchema, text=req.text)
+    if res.success and res.validated:
+        return ExtractResponse(status="success", extracted=res.validated.model_dump())
+    return ExtractResponse(status="failed", error=res.error)
+
+@app.post("/api/extract/image", response_model=ExtractResponse)
+def extract_image_endpoint(file: UploadFile = File(...)):
+    """Multimodal extraction from uploaded image using schema validation with retry."""
+    file_bytes = file.file.read()
+    mime_type = file.content_type or "image/png"
+    res = extract_structured_data(
+        schema=DefaultExtractSchema,
+        image_bytes=file_bytes,
+        mime_type=mime_type
+    )
     if res.success and res.validated:
         return ExtractResponse(status="success", extracted=res.validated.model_dump())
     return ExtractResponse(status="failed", error=res.error)
