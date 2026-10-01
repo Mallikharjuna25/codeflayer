@@ -13,12 +13,13 @@ CODE_STORM/
 │   │   └── main.py              # FastAPI endpoints (/health, /api/process, /api/extract, /api/rag/*)
 │   ├── core/
 │   │   ├── llm_client.py        # Dual Groq + Gemini resilience cascade (retries, timeouts, JSON healing)
+│   │   ├── voice_engine.py      # Dual-cascade Groq Whisper & Gemini voice agent, STT & TTS
 │   │   ├── rag.py               # Local ChromaDB vector retrieval (sentence-transformers all-MiniLM-L6-v2)
 │   │   ├── extraction.py        # Pydantic structured extraction (text & image) with feedback retry
 │   │   └── safety_scaffold.py   # Two-tier safety guards (Tier 0 regex + Tier 1 semantic)
 │   ├── data/
 │   │   └── knowledge/           # Drop domain documents (.md / .txt) here
-│   ├── tests/                   # Pytest test suite (10/10 passing)
+│   ├── tests/                   # Pytest test suite (17/17 passing)
 │   ├── config.py                # Model cascades & API key sanitizer
 │   ├── requirements.txt         # Python dependencies
 │   └── .env.example
@@ -27,9 +28,11 @@ CODE_STORM/
 │   ├── src/
 │   │   ├── components/
 │   │   │   ├── Navbar.jsx       # Real-time backend status pulse & active model badges
+│   │   │   ├── voice/           # Voice Agent Studio: Holographic visualizer, mic recording, TTS
 │   │   │   ├── ChatTab.jsx      # AI Assistant chat thread with source grounding citations
 │   │   │   ├── ExtractTab.jsx   # Drag & drop image/text structured extractor & JSON viewer
 │   │   │   └── KnowledgeTab.jsx # Knowledge base chunk stats & 1-click re-indexing
+│   │   ├── pages/               # Route pages (Dashboard, Chat, Extract/Voice, Knowledge, Resilience)
 │   │   ├── App.jsx              # Tab navigation & layout
 │   │   ├── App.css              # Custom Vanilla CSS: Glassmorphism, sleek dark mode, glow effects
 │   │   ├── index.css            # Typography & design tokens
@@ -46,7 +49,7 @@ CODE_STORM/
 
 ## 🚀 Quick Run Commands
 
-See **[SETUP_INSTRUCTIONS.md](file:///d:/Python/project/eldercare-copilot/hackathon_starter_kit/SETUP_INSTRUCTIONS.md)** for a step-by-step guide with expected terminal outputs and API key setup.
+See **[SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md)** for a step-by-step guide with expected terminal outputs and API key setup.
 
 ### 1. Start Backend (Terminal 1)
 ```bash
@@ -73,8 +76,8 @@ When the problem statement is announced, do not touch the plumbing. Only update 
 
 1. **Knowledge Documents:** Drop problem statement guidelines (`.md`/`.txt`) into `backend/data/knowledge/` and click *"Re-Index"* in the web UI.
 2. **Safety Scanner:** In `backend/core/safety_scaffold.py`, add 3–5 domain regex words into `DEFAULT_RED_FLAG_PATTERNS`.
-3. **Pydantic Schema:** In `backend/api/main.py` line 43, update `DefaultExtractSchema` with the fields you need to extract.
-4. **Assistant Persona:** In `backend/api/main.py` line 78, tune `system_prompt` to fit the domain's persona.
+3. **Pydantic Schema:** In `backend/api/main.py` line 64, update `DefaultExtractSchema` with the fields you need to extract.
+4. **Assistant Persona:** In `backend/api/main.py` line 144, tune `system_prompt` to fit the domain's persona.
 
 ---
 

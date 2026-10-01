@@ -294,10 +294,10 @@ export default function DashboardPage() {
             <div className="dropdown-item-info">
               <div className="dropdown-item-title-row">
                 <span className="dropdown-item-title">Multimodal Studio</span>
-                <span className="dropdown-item-pill">Pydantic</span>
+                <span className="dropdown-item-pill">Voice • Vision</span>
               </div>
               <span className="dropdown-item-desc">
-                Strict Pydantic JSON extraction from text and document scans.
+                Strict Pydantic JSON extraction from voice agent audio, text, and document scans.
               </span>
             </div>
             <ArrowUpRight size={14} className="home-card-arrow" />

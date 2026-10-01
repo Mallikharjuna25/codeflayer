@@ -28,7 +28,7 @@ import './Navbar.css';
 
 const PRODUCT_MODULES = [
   { path: '/chat', label: 'AI Copilot (RAG)', desc: 'Ground queries in local ChromaDB knowledge with sub-second latency.', icon: MessageSquareCode, badge: 'Live' },
-  { path: '/extract', label: 'Multimodal Studio', desc: 'Strict Pydantic JSON extraction from text and document scans.', icon: ScanSearch, badge: 'Pydantic' },
+  { path: '/extract', label: 'Multimodal Studio', desc: 'Strict Pydantic JSON extraction from voice agent audio, text, and document scans.', icon: ScanSearch, badge: 'Voice • Vision' },
   { path: '/knowledge', label: 'Vector Vault', desc: 'Local vector memory with sentence-transformers embedding.', icon: Database },
   { path: '/resilience', label: 'Cascade & Resilience', desc: 'Tier-0 safety interceptor and automatic dual-provider failover.', icon: ShieldCheck, badge: 'Zero 500s' },
 ];

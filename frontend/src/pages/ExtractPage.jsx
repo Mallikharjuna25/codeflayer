@@ -3,6 +3,7 @@ import {
   ScanSearch,
   FileText,
   Image as ImageIcon,
+  Mic,
   UploadCloud,
   CheckCircle,
   Copy,
@@ -10,9 +11,12 @@ import {
   Download,
   AlertTriangle,
   Sparkles,
-  Layers
+  Layers,
+  ShieldAlert,
+  ShieldCheck
 } from 'lucide-react';
 import SpotlightCard from '../components/reactbits/SpotlightCard';
+import VoiceAgentStudio from '../components/voice/VoiceAgentStudio';
 
 const SAMPLE_TEXTS = {
   project: `Project Name: HealthPulse AI Diagnostic Sentinel.
@@ -30,11 +34,12 @@ Key Points:
 };
 
 export default function ExtractPage() {
-  const [mode, setMode] = useState('text');
+  const [mode, setMode] = useState('text'); // 'text' | 'image' | 'voice'
   const [textInput, setTextInput] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
   const [extractedData, setExtractedData] = useState(null);
+  const [voiceSafety, setVoiceSafety] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -46,6 +51,7 @@ export default function ExtractPage() {
       setPreviewUrl(URL.createObjectURL(file));
       setExtractedData(null);
       setErrorMsg('');
+      setVoiceSafety(null);
     }
   };
 
@@ -54,6 +60,7 @@ export default function ExtractPage() {
     setIsProcessing(true);
     setErrorMsg('');
     setExtractedData(null);
+    setVoiceSafety(null);
 
     try {
       const res = await fetch('http://localhost:8000/api/extract', {
@@ -79,6 +86,7 @@ export default function ExtractPage() {
     setIsProcessing(true);
     setErrorMsg('');
     setExtractedData(null);
+    setVoiceSafety(null);
 
     try {
       const formData = new FormData();
@@ -106,6 +114,7 @@ export default function ExtractPage() {
     setTextInput(SAMPLE_TEXTS[sampleKey]);
     setErrorMsg('');
     setExtractedData(null);
+    setVoiceSafety(null);
   };
 
   const handleCopyJson = () => {
@@ -138,10 +147,10 @@ export default function ExtractPage() {
           <div className="product-hero-info">
             <div className="product-hero-title-row">
               <h1 className="product-hero-title">Multimodal Studio</h1>
-              <span className="product-hero-pill">Pydantic</span>
+              <span className="product-hero-pill">Voice • Vision • Pydantic</span>
             </div>
             <p className="product-hero-desc">
-              Strict Pydantic JSON extraction from unstructured text and multimodal document scans.
+              Strict Pydantic JSON extraction & conversational reasoning from unstructured text, document vision scans, and spoken voice agent audio.
             </p>
           </div>
         </div>
@@ -168,6 +177,16 @@ export default function ExtractPage() {
           >
             <ImageIcon size={15} /> Document Image / Vision
           </button>
+          <button
+            className={`mode-btn ${mode === 'voice' ? 'active' : ''}`}
+            onClick={() => {
+              setMode('voice');
+              setErrorMsg('');
+            }}
+          >
+            <Mic size={15} /> Voice Agent / Audio
+            <span className="mode-live-dot" />
+          </button>
         </div>
 
         {mode === 'text' && (
@@ -184,69 +203,85 @@ export default function ExtractPage() {
       </div>
 
       <div className="extract-grid-v2">
-        {/* Left Column: Input Source */}
-        <SpotlightCard className="extract-card" spotlightColor="rgba(37, 99, 235, 0.12)">
-          <div className="card-box-header">
-            <h3 className="box-title">
-              {mode === 'text' ? 'Unstructured Text Source' : 'Upload Document Scan'}
-            </h3>
-            <span className="box-badge">Target: DefaultExtractSchema</span>
-          </div>
-
-          {mode === 'text' ? (
-            <div className="input-block">
-              <textarea
-                rows={11}
-                className="extract-textarea"
-                placeholder="Paste unstructured notes, requirements, specs, resumes, or logs here..."
-                value={textInput}
-                onChange={(e) => setTextInput(e.target.value)}
-              />
-              <div className="action-row">
-                <button
-                  className="primary-action-btn"
-                  onClick={handleExtractText}
-                  disabled={isProcessing || !textInput.trim()}
-                >
-                  <Sparkles size={16} />
-                  <span>{isProcessing ? 'Validating Schema...' : 'Run Extraction'}</span>
-                </button>
+        {/* Left Column: Input Source (Text, Image, or Voice Agent) */}
+        {mode === 'voice' ? (
+          <SpotlightCard className="extract-card" spotlightColor="rgba(56, 189, 248, 0.14)">
+            <div className="card-box-header">
+              <div className="flex items-center gap-2">
+                <Mic size={18} className="text-cyan" />
+                <h3 className="box-title">Multimodal Voice Agent Studio</h3>
               </div>
+              <span className="box-badge">Groq Whisper • Gemini Flash</span>
             </div>
-          ) : (
-            <div className="input-block">
-              <label className="upload-dropzone">
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/jpg"
-                  style={{ display: 'none' }}
-                  onChange={handleFileChange}
-                />
-                <div className="dropzone-icon">
-                  <UploadCloud size={36} className="text-cyan" />
-                </div>
-                <div className="dropzone-text">Click or drag image file here</div>
-                <div className="dropzone-sub">Supports PNG, JPG (Forms, Invoices, Screenshots)</div>
-              </label>
+            <VoiceAgentStudio
+              onExtractionUpdate={(data) => setExtractedData(data)}
+              onSafetyUpdate={(safety) => setVoiceSafety(safety)}
+            />
+          </SpotlightCard>
+        ) : (
+          <SpotlightCard className="extract-card" spotlightColor="rgba(37, 99, 235, 0.12)">
+            <div className="card-box-header">
+              <h3 className="box-title">
+                {mode === 'text' ? 'Unstructured Text Source' : 'Upload Document Scan'}
+              </h3>
+              <span className="box-badge">Target: DefaultExtractSchema</span>
+            </div>
 
-              {previewUrl && (
-                <div className="preview-container">
-                  <img src={previewUrl} alt="Document Preview" className="preview-img" />
-                  <div className="action-row mt-3">
-                    <button
-                      className="primary-action-btn"
-                      onClick={handleExtractImage}
-                      disabled={isProcessing}
-                    >
-                      <Sparkles size={16} />
-                      <span>{isProcessing ? 'Analyzing Vision...' : 'Extract From Image'}</span>
-                    </button>
-                  </div>
+            {mode === 'text' ? (
+              <div className="input-block">
+                <textarea
+                  rows={11}
+                  className="extract-textarea"
+                  placeholder="Paste unstructured notes, requirements, specs, resumes, or logs here..."
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                />
+                <div className="action-row">
+                  <button
+                    className="primary-action-btn"
+                    onClick={handleExtractText}
+                    disabled={isProcessing || !textInput.trim()}
+                  >
+                    <Sparkles size={16} />
+                    <span>{isProcessing ? 'Validating Schema...' : 'Run Extraction'}</span>
+                  </button>
                 </div>
-              )}
-            </div>
-          )}
-        </SpotlightCard>
+              </div>
+            ) : (
+              <div className="input-block">
+                <label className="upload-dropzone">
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                  />
+                  <div className="dropzone-icon">
+                    <UploadCloud size={36} className="text-cyan" />
+                  </div>
+                  <div className="dropzone-text">Click or drag image file here</div>
+                  <div className="dropzone-sub">Supports PNG, JPG (Forms, Invoices, Screenshots)</div>
+                </label>
+
+                {previewUrl && (
+                  <div className="preview-container">
+                    <img src={previewUrl} alt="Document Preview" className="preview-img" />
+                    <div className="action-row mt-3">
+                      <button
+                        className="primary-action-btn"
+                        onClick={handleExtractImage}
+                        disabled={isProcessing}
+                      >
+                        <Sparkles size={16} />
+                        <span>{isProcessing ? 'Analyzing Vision...' : 'Extract From Image'}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </SpotlightCard>
+        )}
 
         {/* Right Column: Output & Structured Inspector */}
         <SpotlightCard className="extract-card" spotlightColor="rgba(139, 92, 246, 0.12)">
@@ -276,7 +311,26 @@ export default function ExtractPage() {
             </div>
           )}
 
-          {extractedData ? (
+          {/* If Safety Intercepted in Voice Mode */}
+          {voiceSafety && voiceSafety.is_flagged ? (
+            <div className="safety-flag-card">
+              <div className="safety-flag-header">
+                <ShieldAlert size={28} className="text-rose shrink-0" />
+                <div>
+                  <h4 className="safety-flag-title">Tier-0 Safety Scaffold Intercepted</h4>
+                  <span className="safety-flag-time">&lt; 0.5ms Sub-Millisecond Guard</span>
+                </div>
+              </div>
+              <p className="safety-flag-desc">
+                The voice request contained restricted keywords or patterns that violate corporate safety policies.
+                Downstream LLM execution was aborted to prevent data compromise.
+              </p>
+              <div className="safety-trigger-tag">
+                <span>Trigger:</span>
+                <code>{voiceSafety.trigger}</code>
+              </div>
+            </div>
+          ) : extractedData ? (
             <div className="output-content">
               {/* Visual Card Summary */}
               <div className="extracted-summary-card">
@@ -327,7 +381,9 @@ export default function ExtractPage() {
               </div>
               <h4 className="awaiting-title">No Extraction Active</h4>
               <p className="awaiting-desc">
-                Select a preset or upload an image and click "Run Extraction" to inspect parsed Pydantic structures.
+                {mode === 'voice'
+                  ? 'Speak to the Voice Agent or audition a preset to inspect live transcript, audio synthesis, and validated Pydantic schema.'
+                  : 'Select a preset or upload an image and click "Run Extraction" to inspect parsed Pydantic structures.'}
               </p>
             </div>
           )}

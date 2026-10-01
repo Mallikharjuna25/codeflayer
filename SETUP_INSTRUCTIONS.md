@@ -105,8 +105,9 @@ pytest -v
 
 **Expected Output:**
 ```
-======================= 10 passed in 3.50s =======================
+======================= 17 passed in 4.50s =======================
 ```
+*(Runs tests for Schema Extraction, Groq/Gemini Cascade, ChromaDB RAG, Tier-0 Safety, and Voice Agent Engine).*
 
 ### 7. Start the FastAPI Backend Server:
 ```bash
@@ -125,10 +126,10 @@ INFO:     Application startup complete.
 
 ## ⚛️ Step 4: Frontend Setup (React + Vite)
 
-Open a **NEW terminal window** (keep the backend terminal open) and navigate to the project root:
+Open a **NEW terminal window** (keep the backend terminal open) and navigate to the frontend folder:
 
 ```bash
-cd CODE_STORM/frontend
+cd frontend
 ```
 
 ### 1. Install frontend packages:
@@ -161,17 +162,21 @@ npm run dev
 
 1. Open your browser and navigate to: **`http://localhost:5173`**
 2. In the top navbar, you should see a **green glowing badge: `Backend Connected`**.
-3. **Tab 1 (AI Copilot):** Type *"What is CODE_STORM?"* and hit Send. You will receive an instant grounded answer served by Groq with cited sources.
-4. **Tab 2 (Multimodal Extraction):** Switch to Image Upload, select any document or invoice image, and see instant schema-validated JSON.
-5. **Tab 3 (Vector Knowledge):** Click *"Re-Index Knowledge Base Now"* to confirm local vector indexing works.
+3. **AI Copilot (`/chat`):** Type *"What is the dual-provider resilience architecture?"* and hit Send to test sub-second RAG response from local ChromaDB.
+4. **Multimodal Studio (`/extract`):**
+   - **Text Input Mode:** Paste unstructured notes or click preset to validate Pydantic output.
+   - **Document Vision Mode:** Upload an invoice or scan image for vision schema parsing.
+   - **Voice Agent & Audio Mode:** Test live microphone recording, drop an audio memo (.wav/.mp3), or click any Spoken Preset (*Sentinel Incident Dispatch*, *Clinical Telemetry*, *Adversarial Threat Test*) to test Groq Whisper transcription, neural TTS vocal response, and Tier-0 safety governor interception!
+5. **Vector Vault (`/knowledge`):** Click *"Re-Index Knowledge Base Now"* to confirm local vector indexing works.
+6. **Resilience & Governance (`/resilience`):** Inspect real-time provider fallback metrics and safety test harnesses.
 
 ---
 
 ## ⏱️ What We Do When Problem Statement is Announced
 
-We do **not** touch the plumbing (Groq/Gemini fallback, Chroma embeddings, or the UI shell are already done). We only edit these 4 spots:
+We do **not** touch the plumbing (Groq/Gemini fallback, Chroma embeddings, Voice Agent, or UI shell are already done). We only edit these 4 spots:
 
 1. **Drop Domain Guidelines:** Place the hackathon problem statement documents (`.md` or `.txt`) into `backend/data/knowledge/` and click *"Re-Index"* in the UI.
 2. **Set Security Keywords (`backend/core/safety_scaffold.py`):** Add 3–5 domain regex words into `DEFAULT_RED_FLAG_PATTERNS`.
-3. **Set Extraction Fields (`backend/api/main.py` line 43):** Update `DefaultExtractSchema` with the JSON fields the problem statement needs.
-4. **Tune Persona (`backend/api/main.py` line 78):** Update `system_prompt` to fit the domain's persona.
+3. **Set Extraction Fields (`backend/api/main.py` line 64):** Update `DefaultExtractSchema` with the JSON fields the problem statement needs.
+4. **Tune Persona (`backend/api/main.py` line 144):** Update `system_prompt` to fit the domain's persona.

@@ -1,7 +1,7 @@
 import sys
 import time
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Tuple
 from pydantic import BaseModel, Field
 
 # Ensure backend root is on sys.path
@@ -20,6 +20,7 @@ from core.extraction import extract_structured_data
 from core.safety_scaffold import scan_for_flags
 from core.database import init_db, SessionLocal
 from core.seed import seed_database
+from core.voice_engine import transcribe_audio, process_voice_agent_dialogue
 from api.governance_routes import router as governance_router
 
 @asynccontextmanager
@@ -72,6 +73,31 @@ class ExtractRequest(BaseModel):
 class ExtractResponse(BaseModel):
     status: str
     extracted: Optional[Dict[str, Any]] = None
+    transcript: Optional[str] = None
+    provider_used: Optional[str] = None
+    error: Optional[str] = None
+
+class VoiceAgentRequest(BaseModel):
+    query: str = Field(..., min_length=1, description="Voice query or transcript")
+    user_context: Optional[str] = ""
+    mode: Optional[str] = "dialogue"
+
+class VoiceAgentResponse(BaseModel):
+    status: str
+    transcript: str
+    spoken_response: str
+    detailed_response: str
+    extracted_data: Optional[Dict[str, Any]] = None
+    is_flagged: bool = False
+    safety_trigger: Optional[str] = None
+    provider_used: str = ""
+    sources: List[str] = Field(default_factory=list)
+    error: Optional[str] = None
+
+class VoiceTranscribeResponse(BaseModel):
+    status: str
+    transcript: str
+    provider_used: str = ""
     error: Optional[str] = None
 
 @app.get("/health")
@@ -156,11 +182,24 @@ def extract_fields_endpoint(req: ExtractRequest):
         return ExtractResponse(status="success", extracted=res.validated.model_dump())
     return ExtractResponse(status="failed", error=res.error)
 
+MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024  # 25 MB file safety limit
+
+def _read_bounded_file(file: UploadFile, default_mime: str, max_bytes: int = MAX_UPLOAD_SIZE_BYTES) -> Tuple[bytes, str, str]:
+    """Reads uploaded file with size capping, MIME normalization, and filename sanitization."""
+    raw = file.file.read(max_bytes + 1)
+    if len(raw) > max_bytes:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=f"Uploaded file exceeds maximum allowed size of {max_bytes // (1024 * 1024)}MB."
+        )
+    raw_mime = (file.content_type or default_mime).split(";")[0].strip() or default_mime
+    safe_name = Path(file.filename or "recording.wav").name
+    return raw, raw_mime, safe_name
+
 @app.post("/api/extract/image", response_model=ExtractResponse)
 def extract_image_endpoint(file: UploadFile = File(...)):
     """Multimodal extraction from uploaded image using schema validation with retry."""
-    file_bytes = file.file.read()
-    mime_type = file.content_type or "image/png"
+    file_bytes, mime_type, _ = _read_bounded_file(file, default_mime="image/png")
     res = extract_structured_data(
         schema=DefaultExtractSchema,
         image_bytes=file_bytes,
@@ -169,6 +208,103 @@ def extract_image_endpoint(file: UploadFile = File(...)):
     if res.success and res.validated:
         return ExtractResponse(status="success", extracted=res.validated.model_dump())
     return ExtractResponse(status="failed", error=res.error)
+
+@app.post("/api/extract/audio", response_model=ExtractResponse)
+def extract_audio_endpoint(file: UploadFile = File(...)):
+    """Multimodal extraction from uploaded or recorded speech audio with Groq/Gemini transcription."""
+    file_bytes, mime_type, filename = _read_bounded_file(file, default_mime="audio/wav")
+
+    # Step 1: Transcribe audio using dual cascade (Groq Whisper / Gemini)
+    trans_res = transcribe_audio(audio_bytes=file_bytes, filename=filename, mime_type=mime_type)
+    if not trans_res.success or not trans_res.transcript.strip():
+        return ExtractResponse(
+            status="failed",
+            error=trans_res.error or "Audio transcription failed or no speech detected."
+        )
+
+    # Step 2: Extract structured data from transcript
+    res = extract_structured_data(schema=DefaultExtractSchema, text=trans_res.transcript)
+    if res.success and res.validated:
+        return ExtractResponse(
+            status="success",
+            extracted=res.validated.model_dump(),
+            transcript=trans_res.transcript,
+            provider_used=trans_res.provider_used
+        )
+    return ExtractResponse(
+        status="failed",
+        transcript=trans_res.transcript,
+        provider_used=trans_res.provider_used,
+        error=res.error or "Extracted fields failed schema validation."
+    )
+
+@app.post("/api/voice/agent", response_model=VoiceAgentResponse)
+def voice_agent_endpoint(req: VoiceAgentRequest):
+    """Interactive conversational Voice Agent with safety scanning, RAG retrieval, and speech-ready synthesis."""
+    res = process_voice_agent_dialogue(
+        transcript=req.query,
+        user_context=req.user_context,
+        mode=req.mode or "dialogue"
+    )
+    return VoiceAgentResponse(
+        status="ok",
+        transcript=res.transcript,
+        spoken_response=res.spoken_response,
+        detailed_response=res.detailed_response,
+        extracted_data=res.extracted_data,
+        is_flagged=res.is_flagged,
+        safety_trigger=res.safety_trigger,
+        provider_used=res.provider_used,
+        sources=res.sources,
+        error=res.error
+    )
+
+@app.post("/api/voice/interact-audio", response_model=VoiceAgentResponse)
+def voice_interact_audio_endpoint(file: UploadFile = File(...)):
+    """Direct end-to-end voice loop: receives audio, transcribes it, and responds as the Voice Agent."""
+    file_bytes, mime_type, filename = _read_bounded_file(file, default_mime="audio/wav")
+
+    trans_res = transcribe_audio(audio_bytes=file_bytes, filename=filename, mime_type=mime_type)
+    if not trans_res.success:
+        return VoiceAgentResponse(
+            status="failed",
+            transcript="",
+            spoken_response="Sorry, I could not decipher the audio speech. Please try speaking again.",
+            detailed_response="Audio transcription failed. Error: " + (trans_res.error or "Unknown"),
+            error=trans_res.error
+        )
+
+    res = process_voice_agent_dialogue(transcript=trans_res.transcript)
+    return VoiceAgentResponse(
+        status="ok",
+        transcript=res.transcript,
+        spoken_response=res.spoken_response,
+        detailed_response=res.detailed_response,
+        extracted_data=res.extracted_data,
+        is_flagged=res.is_flagged,
+        safety_trigger=res.safety_trigger,
+        provider_used=f"{trans_res.provider_used} + {res.provider_used}",
+        sources=res.sources,
+        error=res.error
+    )
+
+@app.post("/api/voice/transcribe", response_model=VoiceTranscribeResponse)
+def voice_transcribe_endpoint(file: UploadFile = File(...)):
+    """Fast speech-to-text endpoint powered by Groq Whisper cascade."""
+    file_bytes, mime_type, filename = _read_bounded_file(file, default_mime="audio/wav")
+
+    trans_res = transcribe_audio(audio_bytes=file_bytes, filename=filename, mime_type=mime_type)
+    if trans_res.success:
+        return VoiceTranscribeResponse(
+            status="ok",
+            transcript=trans_res.transcript,
+            provider_used=trans_res.provider_used
+        )
+    return VoiceTranscribeResponse(
+        status="failed",
+        transcript="",
+        error=trans_res.error or "Transcription failed."
+    )
 
 @app.post("/api/rag/ingest")
 def trigger_rag_ingest():

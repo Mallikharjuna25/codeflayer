@@ -50,6 +50,11 @@ GROQ_VISION_MODELS = _env_list("GROQ_VISION_MODELS", [
     "qwen/qwen3.8-27b"
 ])
 
+GROQ_WHISPER_MODELS = _env_list("GROQ_WHISPER_MODELS", [
+    "whisper-large-v3-turbo",
+    "whisper-large-v3"
+])
+
 GEMINI_MODELS = _env_list("GEMINI_MODELS", [
     "gemini-3.5-flash",        # Primary fast multimodal endpoint
     "gemini-flash-latest",     # Stable alias pointer
