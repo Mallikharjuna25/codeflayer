@@ -103,8 +103,11 @@ class VoiceTranscribeResponse(BaseModel):
     error: Optional[str] = None
 
 @app.get("/health")
+@app.get("/api/health")
+@app.get("/api/ping")
 def health_check():
     return {"status": "ok", "service": "code_storm_backend"}
+
 
 class SafetyScanRequest(BaseModel):
     query: str = Field(..., min_length=1)

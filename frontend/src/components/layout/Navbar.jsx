@@ -96,27 +96,44 @@ export default function Navbar() {
   const location = useLocation();
 
   useEffect(() => {
+    let isMounted = true;
+
     const checkHealth = async () => {
       const startTime = performance.now();
       try {
-        const res = await fetch(apiUrl('/health'));
-        if (res.ok) {
-          setIsOnline(true);
-          setLatency(Math.round(performance.now() - startTime));
-        } else {
+        let res = await fetch(apiUrl('/api/ping')).catch(() => null);
+        if (!res || !res.ok) {
+          res = await fetch(apiUrl('/health')).catch(() => null);
+        }
+        if (!res || !res.ok) {
+          res = await fetch(apiUrl('/api/auth/demo-accounts')).catch(() => null);
+        }
+
+        if (isMounted) {
+          if (res && res.ok) {
+            setIsOnline(true);
+            setLatency(Math.max(1, Math.round(performance.now() - startTime)));
+          } else {
+            setIsOnline(false);
+            setLatency(null);
+          }
+        }
+      } catch (err) {
+        if (isMounted) {
           setIsOnline(false);
           setLatency(null);
         }
-      } catch (err) {
-        setIsOnline(false);
-        setLatency(null);
       }
     };
 
     checkHealth();
-    const interval = setInterval(checkHealth, 4000);
-    return () => clearInterval(interval);
+    const interval = setInterval(checkHealth, 5000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, []);
+
 
   // Close menus on route change
   useEffect(() => {
