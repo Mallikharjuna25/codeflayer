@@ -3460,3 +3460,239 @@
   border-radius: 4px;
 }
 
+/* ==========================================================================
+   COMPREHENSIVE RESPONSIVE DESIGN SYSTEM (Mobile, Tablet, Laptop, Ultra-Wide)
+   ========================================================================== */
+
+/* Ultra-Wide and Large Desktop (> 1440px) */
+@media (min-width: 1441px) {
+  .app-main-viewport {
+    max-width: 1560px;
+  }
+}
+
+/* Standard Laptops & Tablets Landscape (max-width: 1080px) */
+@media (max-width: 1080px) {
+  .app-main-viewport {
+    padding: 1rem 1.25rem 3.5rem 1.25rem;
+  }
+
+  .extract-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .home-organization-container {
+    gap: 2rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .voice-studio-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablets Portrait & Medium Screens (max-width: 768px) */
+@media (max-width: 768px) {
+  .app-main-viewport {
+    padding: 0.85rem 1rem 3rem 1rem;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .card-title {
+    font-size: 1.35rem;
+  }
+
+  .card-subtitle {
+    font-size: 0.85rem;
+  }
+
+  /* Chat Viewport */
+  .chat-page-container {
+    padding: 0;
+  }
+
+  .chat-stream-window {
+    max-height: calc(100vh - 240px);
+    padding: 0.75rem;
+  }
+
+  .message-bubble {
+    max-width: 96%;
+    padding: 0.85rem 1rem;
+    font-size: 0.88rem;
+  }
+
+  .tier-inspection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gateway-status-pill-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .chat-input-area {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .chat-input-controls {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  /* Suggestion chips horizontal scroll on mobile */
+  .prompt-suggestions-row {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    gap: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .prompt-suggestions-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .prompt-pill {
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+  }
+
+  /* Stats and metric grids */
+  .stats-banner {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .stat-box {
+    padding: 1rem;
+  }
+
+  .stat-num {
+    font-size: 1.75rem;
+  }
+
+  /* Tables horizontal scrolling */
+  .table-responsive-wrapper,
+  .audit-table-wrapper,
+  .governance-table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Modal Dialogs */
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .modal-dialog,
+  .company-login-modal,
+  .session-audits-modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0.5rem !important;
+    max-height: 92vh !important;
+    border-radius: 14px !important;
+  }
+
+  .mode-toggle {
+    width: 100%;
+    display: flex;
+  }
+
+  .toggle-btn {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* Small Mobile Phones (max-width: 480px) */
+@media (max-width: 480px) {
+  .app-main-viewport {
+    padding: 0.6rem 0.6rem 2.5rem 0.6rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .halo-wordmark {
+    font-size: 1.2rem;
+  }
+
+  .brand-logo {
+    font-size: 1rem;
+  }
+
+  .hero-title {
+    font-size: 1.75rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero-subtitle {
+    font-size: 0.88rem !important;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .hero-actions a,
+  .hero-actions button {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .message-bubble {
+    max-width: 100%;
+    border-radius: 12px;
+  }
+
+  .chat-input-textarea {
+    font-size: 0.88rem;
+  }
+
+  .gateway-telemetry-box {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .json-display {
+    max-height: 360px;
+    font-size: 0.75rem;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .footer-links {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+

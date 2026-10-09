@@ -255,3 +255,47 @@
   display: flex;
   justify-content: center;
 }
+
+/* Responsive Rules for Policy Page */
+@media (max-width: 768px) {
+  .policy-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .toolbar-left,
+  .toolbar-tabs {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .toolbar-tab-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 0.45rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .policy-markdown-textarea,
+  .policy-preview-wrapper {
+    padding: 1rem;
+    min-height: 380px;
+    font-size: 0.82rem;
+  }
+
+  .policy-editor-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .policy-access-denied-card {
+    margin: 2rem 0.75rem;
+    padding: 2rem 1.25rem;
+  }
+}
+
