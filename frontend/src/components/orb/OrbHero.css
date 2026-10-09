@@ -1,37 +1,40 @@
 /* -------------------------------------------------------------------------
-   HYPERSPEED HERO - PROPER TOOL TITLE ALIGNMENT FOR HALO
+   ORB HERO - REACT BITS ORB INTEGRATION FOR HALO
 -------------------------------------------------------------------------- */
 
-.hyperspeed-hero-container {
+.orb-hero-container {
   position: relative;
   width: 100%;
-  min-height: 560px;
+  min-height: 580px;
   height: 600px;
   background: #06070d;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 
     0 25px 80px -15px rgba(0, 0, 0, 0.95),
-    0 0 50px -15px rgba(3, 179, 195, 0.15);
+    0 0 60px -15px rgba(97, 67, 254, 0.2);
   overflow: hidden;
   user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 2.5rem;
-  cursor: pointer;
 }
 
-.hyperspeed-canvas-layer {
+.orb-canvas-layer {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
 }
 
 /* Centered Content Stage */
-.hyperspeed-hero-content-stage {
+.orb-hero-content-stage {
   position: relative;
   z-index: 3;
   width: 100%;
@@ -187,12 +190,12 @@
 }
 
 @media (max-width: 768px) {
-  .hyperspeed-hero-container {
+  .orb-hero-container {
     min-height: 480px;
     height: 520px;
   }
 
-  .hyperspeed-hero-content-stage {
+  .orb-hero-content-stage {
     padding: 1.5rem 1rem;
   }
 

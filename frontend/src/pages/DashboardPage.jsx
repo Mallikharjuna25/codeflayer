@@ -28,7 +28,7 @@ import {
   Users,
   FileText
 } from 'lucide-react';
-import HyperspeedHero from '../components/hyperspeed/HyperspeedHero';
+import OrbHero from '../components/orb/OrbHero';
 import { useAuth } from '../context/AuthContext';
 
 export default function DashboardPage() {
@@ -157,10 +157,10 @@ export default function DashboardPage() {
   return (
     <div className="apg-main-viewport">
       {/* -------------------------------------------------------------------
-          1. REACT BITS HYPERSPEED HERO
-             High-speed 3D WebGL warp speed highway with centered HALO intelligence
+          1. REACT BITS ORB HERO
+             Interactive 3D WebGL glowing Orb dynamically reacting to governance state
       -------------------------------------------------------------------- */}
-      <HyperspeedHero />
+      <OrbHero orbState={orbState} />
 
       {/* -------------------------------------------------------------------
           2. INTERACTION STATE DISPLAY
