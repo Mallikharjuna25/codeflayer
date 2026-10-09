@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Activity } from 'lucide-react';
-import Orb from '../reactbits/Orb';
-import './OrbHero.css';
+import Eclipse from '../reactbits/Eclipse';
+import './EclipseHero.css';
 
-export default function OrbHero({ orbState = 'idle' }) {
+export default function EclipseHero({ orbState = 'idle' }) {
   const navigate = useNavigate();
 
   const handleLaunchChat = (e) => {
@@ -20,58 +20,63 @@ export default function OrbHero({ orbState = 'idle' }) {
     }
   };
 
-  // State-specific orb configurations based on Governor runtime
-  const getOrbConfig = () => {
+  // State-specific Eclipse configurations reflecting Governor runtime telemetry
+  const getEclipseConfig = () => {
     switch (orbState) {
       case 'analyzing':
         return {
-          hue: 200,
-          hoverIntensity: 0.65,
-          rotateOnHover: true,
-          forceHoverState: true
+          radius: 0.40,
+          speed: 1.4,
+          turbulence: 1.6,
+          coronaSpread: 0.44,
+          colorShift: 0.35 // Electric cyan / deep blue plasma
         };
       case 'approval_required':
         return {
-          hue: 45,
-          hoverIntensity: 0.6,
-          rotateOnHover: true,
-          forceHoverState: true
+          radius: 0.43,
+          speed: 1.1,
+          turbulence: 1.4,
+          coronaSpread: 0.42,
+          colorShift: 0.65 // Solar flare amber / golden corona
         };
       case 'blocked':
         return {
-          hue: 340,
-          hoverIntensity: 0.75,
-          rotateOnHover: true,
-          forceHoverState: true
+          radius: 0.45,
+          speed: 1.8,
+          turbulence: 2.0,
+          coronaSpread: 0.50,
+          colorShift: 0.95 // Crimson threat interceptor corona
         };
       case 'idle':
       default:
         return {
-          hue: 0,
-          hoverIntensity: 0.5,
-          rotateOnHover: true,
-          forceHoverState: false
+          radius: 0.42,
+          speed: 0.8,
+          turbulence: 1.2,
+          coronaSpread: 0.38,
+          colorShift: 0.0 // Base spectral violet / cyan / gold corona
         };
     }
   };
 
-  const orbConfig = getOrbConfig();
+  const config = getEclipseConfig();
 
   return (
-    <div className="orb-hero-container">
-      {/* Background 3D React Bits WebGL Orb Canvas */}
-      <div className="orb-canvas-layer">
-        <Orb
-          hue={orbConfig.hue}
-          hoverIntensity={orbConfig.hoverIntensity}
-          rotateOnHover={orbConfig.rotateOnHover}
-          forceHoverState={orbConfig.forceHoverState}
+    <div className="eclipse-hero-container">
+      {/* Background 3D React Bits Pro WebGL Eclipse */}
+      <div className="eclipse-canvas-layer">
+        <Eclipse
+          radius={config.radius}
+          speed={config.speed}
+          turbulence={config.turbulence}
+          coronaSpread={config.coronaSpread}
+          colorShift={config.colorShift}
           backgroundColor="#06070d"
         />
       </div>
 
       {/* Hero Title & Tool Metadata Stage */}
-      <div className="orb-hero-content-stage">
+      <div className="eclipse-hero-content-stage">
         <div className="halo-title-block">
           {/* Badge Identifier */}
           <div className="halo-badge-pill">

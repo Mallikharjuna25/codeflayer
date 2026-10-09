@@ -1,8 +1,8 @@
 /* -------------------------------------------------------------------------
-   ORB HERO - REACT BITS ORB INTEGRATION FOR HALO
+   ECLIPSE HERO - REACT BITS PRO ECLIPSE INTEGRATION FOR HALO
 -------------------------------------------------------------------------- */
 
-.orb-hero-container {
+.eclipse-hero-container {
   position: relative;
   width: 100%;
   min-height: 580px;
@@ -12,7 +12,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 
     0 25px 80px -15px rgba(0, 0, 0, 0.95),
-    0 0 60px -15px rgba(97, 67, 254, 0.2);
+    0 0 60px -15px rgba(6, 182, 212, 0.2);
   overflow: hidden;
   user-select: none;
   display: flex;
@@ -21,7 +21,7 @@
   margin-bottom: 2.5rem;
 }
 
-.orb-canvas-layer {
+.eclipse-canvas-layer {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -30,11 +30,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: auto;
 }
 
-/* Centered Content Stage */
-.orb-hero-content-stage {
+/* Centered Content Stage in front of the dark eclipse */
+.eclipse-hero-content-stage {
   position: relative;
   z-index: 3;
   width: 100%;
@@ -111,7 +110,7 @@
   color: #ffffff;
   margin: 0;
   text-align: center;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95);
 }
 
 /* Subtitle / Tagline */
@@ -190,12 +189,12 @@
 }
 
 @media (max-width: 768px) {
-  .orb-hero-container {
+  .eclipse-hero-container {
     min-height: 480px;
     height: 520px;
   }
 
-  .orb-hero-content-stage {
+  .eclipse-hero-content-stage {
     padding: 1.5rem 1rem;
   }
 

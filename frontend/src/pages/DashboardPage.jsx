@@ -28,7 +28,7 @@ import {
   Users,
   FileText
 } from 'lucide-react';
-import OrbHero from '../components/orb/OrbHero';
+import EclipseHero from '../components/eclipse/EclipseHero';
 import { useAuth } from '../context/AuthContext';
 
 export default function DashboardPage() {
@@ -157,10 +157,10 @@ export default function DashboardPage() {
   return (
     <div className="apg-main-viewport">
       {/* -------------------------------------------------------------------
-          1. REACT BITS ORB HERO
-             Interactive 3D WebGL glowing Orb dynamically reacting to governance state
+          1. REACT BITS PRO ECLIPSE HERO
+             Turbulent spectral corona burning around a dark eclipsing shape
       -------------------------------------------------------------------- */}
-      <OrbHero orbState={orbState} />
+      <EclipseHero orbState={orbState} />
 
       {/* -------------------------------------------------------------------
           2. INTERACTION STATE DISPLAY
