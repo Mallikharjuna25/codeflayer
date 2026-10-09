@@ -50,6 +50,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:3000",
+        "https://halo-seven-kohl.vercel.app",
         "https://halo-ai5.vercel.app",
     ],
     allow_origin_regex=r"https?://.*",
@@ -58,6 +59,7 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
+
 
 
 app.include_router(governance_router)
