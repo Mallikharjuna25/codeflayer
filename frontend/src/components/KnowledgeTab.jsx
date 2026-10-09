@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiUrl } from '../lib/api';
 
 export default function KnowledgeTab() {
   const [chunkCount, setChunkCount] = useState(0);
@@ -7,7 +8,7 @@ export default function KnowledgeTab() {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/rag/stats');
+      const res = await fetch(apiUrl('/api/rag/stats'));
       if (res.ok) {
         const data = await res.json();
         setChunkCount(data.total_chunks || 0);
@@ -25,7 +26,8 @@ export default function KnowledgeTab() {
     setIsIngesting(true);
     setStatusNote('');
     try {
-      const res = await fetch('http://localhost:8000/api/rag/ingest', { method: 'POST' });
+      const res = await fetch(apiUrl('/api/rag/ingest'), { method: 'POST' });
+
       const data = await res.json();
       if (res.ok && data.status === 'success') {
         setStatusNote(`✅ Successfully indexed ${data.chunks_ingested} chunks!`);

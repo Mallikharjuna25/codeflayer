@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { apiUrl } from '../lib/api';
 
 export default function Navbar() {
   const [isOnline, setIsOnline] = useState(false);
@@ -6,13 +7,14 @@ export default function Navbar() {
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        const res = await fetch('http://localhost:8000/health');
-        if (res.ok) setIsOnline(true);
+        const res = await fetch(apiUrl('/api/ping')).catch(() => fetch(apiUrl('/health')));
+        if (res && res.ok) setIsOnline(true);
         else setIsOnline(false);
       } catch (err) {
         setIsOnline(false);
       }
     };
+
 
     checkHealth();
     const interval = setInterval(checkHealth, 5000);

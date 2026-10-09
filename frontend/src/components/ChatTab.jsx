@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { apiUrl } from '../lib/api';
 
 export default function ChatTab() {
   const [messages, setMessages] = useState([
@@ -31,11 +32,12 @@ export default function ChatTab() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/process', {
+      const response = await fetch(apiUrl('/api/process'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: userText })
       });
+
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));

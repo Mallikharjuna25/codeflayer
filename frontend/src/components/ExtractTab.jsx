@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { apiUrl } from '../lib/api';
 
 export default function ExtractTab() {
   const [mode, setMode] = useState('text');
@@ -26,7 +27,7 @@ export default function ExtractTab() {
     setExtractedData(null);
 
     try {
-      const res = await fetch('http://localhost:8000/api/extract', {
+      const res = await fetch(apiUrl('/api/extract'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: textInput })
@@ -54,10 +55,11 @@ export default function ExtractTab() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const res = await fetch('http://localhost:8000/api/extract/image', {
+      const res = await fetch(apiUrl('/api/extract/image'), {
         method: 'POST',
         body: formData
       });
+
       const data = await res.json();
       if (res.ok && data.status === 'success') {
         setExtractedData(data.extracted);
