@@ -332,12 +332,32 @@
   text-decoration: none;
   box-shadow: 0 2px 10px rgba(255, 255, 255, 0.15);
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .openai-try-btn:hover {
   background: #f1f5f9;
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 640px) {
+  .openai-try-btn {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .openai-try-btn span {
+    display: none;
+  }
+  .openai-try-btn {
+    padding: 0.35rem 0.55rem;
+  }
+  .openai-try-btn::after {
+    content: "Try";
+  }
 }
 
 /* Mobile Toggle */
@@ -348,6 +368,7 @@
   color: #cbd5e1;
   padding: 0.4rem;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 @media (max-width: 1080px) {
@@ -357,6 +378,7 @@
     justify-content: center;
   }
 }
+
 
 /* Mobile Menu */
 .openai-mobile-menu {

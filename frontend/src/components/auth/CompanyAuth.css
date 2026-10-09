@@ -637,6 +637,24 @@
   animation: authFadeIn 0.2s ease-out;
 }
 
+@media (max-width: 640px) {
+  .navbar-user-btn {
+    padding: 0.3rem 0.45rem;
+    gap: 0.3rem;
+  }
+  .navbar-company-tag,
+  .navbar-user-name,
+  .navbar-role-badge {
+    display: none;
+  }
+  .navbar-profile-dropdown {
+    width: calc(100vw - 20px);
+    right: -10px;
+    max-width: 320px;
+  }
+}
+
+
 .profile-card-header {
   display: flex;
   align-items: center;

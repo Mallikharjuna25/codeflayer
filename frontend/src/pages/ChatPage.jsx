@@ -307,84 +307,30 @@ export default function ChatPage() {
   return (
     <div className="page-container">
       {/* Session Scope Alert Banner */}
-      <div
-        style={{
-          background: isAdmin
-            ? 'linear-gradient(90deg, rgba(168, 85, 247, 0.14), rgba(59, 130, 246, 0.08))'
-            : 'linear-gradient(90deg, rgba(6, 182, 212, 0.14), rgba(59, 130, 246, 0.08))',
-          border: isAdmin
-            ? '1px solid rgba(168, 85, 247, 0.3)'
-            : '1px solid rgba(6, 182, 212, 0.3)',
-          borderRadius: '12px',
-          padding: '0.75rem 1.25rem',
-          marginBottom: '1rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '0.6rem'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <div
-            style={{
-              padding: '0.35rem 0.65rem',
-              borderRadius: '9999px',
-              fontWeight: 700,
-              fontSize: '0.75rem',
-              background: isAdmin ? 'rgba(168, 85, 247, 0.25)' : 'rgba(6, 182, 212, 0.25)',
-              color: isAdmin ? '#d8b4fe' : '#67e8f9',
-              border: isAdmin ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid rgba(6, 182, 212, 0.4)'
-            }}
-          >
+      <div className={`chat-auth-banner ${isAdmin ? 'admin-mode' : 'user-mode'}`}>
+        <div className="chat-auth-banner-left">
+          <div className={`chat-auth-pill ${isAdmin ? 'admin-mode' : 'user-mode'}`}>
             {isAdmin ? '👑 Administrator Mode' : '📊 Employee Mode'}
           </div>
-          <span style={{ fontSize: '0.86rem', color: '#f1f5f9' }}>
-            Authenticated as <strong>{currentUser?.full_name || 'User'}</strong> ({currentUser?.email || 'name@company.com'})
-          </span>
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
-            — {isAdmin ? 'All platform features & policy .md editing enabled.' : 'Authorized exclusively to use the 3-Tier Gateway Chatbot.'}
-          </span>
+          <div className="chat-auth-user-text">
+            <span>Authenticated as <strong>{currentUser?.full_name || 'User'}</strong> ({currentUser?.email || 'name@company.com'})</span>
+            <span className="chat-auth-sub-desc"> — {isAdmin ? 'All platform features & policy .md editing enabled.' : 'Authorized exclusively to use the 3-Tier Gateway Chatbot.'}</span>
+          </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        <div className="chat-auth-banner-right">
           {isAdmin && (
-            <Link
-              to="/policy"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                color: '#d8b4fe',
-                background: 'rgba(168, 85, 247, 0.18)',
-                border: '1px solid rgba(168, 85, 247, 0.35)',
-                padding: '0.3rem 0.75rem',
-                borderRadius: '8px',
-                textDecoration: 'none'
-              }}
-            >
+            <Link to="/policy" className="chat-auth-action-btn primary">
               <FileText size={12} />
               <span>Update Policy .md</span>
             </Link>
           )}
-          <button
-            onClick={() => setLoginModalOpen(true)}
-            style={{
-              fontSize: '0.78rem',
-              color: '#cbd5e1',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              padding: '0.3rem 0.65rem',
-              borderRadius: '8px',
-              cursor: 'pointer'
-            }}
-          >
+          <button onClick={() => setLoginModalOpen(true)} className="chat-auth-action-btn">
             Switch Account
           </button>
         </div>
       </div>
+
 
       {/* Hero Card */}
       <div className="product-page-hero-card">
