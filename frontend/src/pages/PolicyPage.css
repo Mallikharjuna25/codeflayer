@@ -1,0 +1,257 @@
+/* -------------------------------------------------------------------------
+   POLICY PAGE CSS - ENTERPRISE POLICY MARKDOWN COMPILER
+-------------------------------------------------------------------------- */
+
+.policy-editor-card {
+  padding: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 15, 30, 0.7);
+  backdrop-filter: blur(20px);
+}
+
+.policy-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.file-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 8px;
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  color: #d8b4fe;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.vector-stat-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 8px;
+  background: rgba(6, 182, 212, 0.12);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  color: #67e8f9;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.toolbar-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.toolbar-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toolbar-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.toolbar-tab-btn.active {
+  background: rgba(168, 85, 247, 0.2);
+  border-color: rgba(168, 85, 247, 0.4);
+  color: #ffffff;
+}
+
+.policy-loading-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 6rem 2rem;
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+.policy-editor-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.policy-markdown-textarea {
+  width: 100%;
+  min-height: 480px;
+  max-height: 720px;
+  padding: 1.5rem;
+  background: #080d1a;
+  color: #f1f5f9;
+  font-family: var(--font-mono, 'JetBrains Mono', 'Fira Code', monospace);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  border: none;
+  outline: none;
+  resize: vertical;
+}
+
+.policy-markdown-textarea:focus {
+  background: #060a14;
+}
+
+.policy-preview-wrapper {
+  padding: 2rem;
+  min-height: 480px;
+  background: #080d1a;
+  overflow-y: auto;
+}
+
+.policy-preview-content {
+  max-width: 900px;
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.preview-h1 {
+  font-size: 1.5rem;
+  color: #ffffff;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.preview-h2 {
+  font-size: 1.15rem;
+  color: #c084fc;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.preview-paragraph {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.policy-editor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.4rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.76rem;
+}
+
+.editor-status-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #94a3b8;
+}
+
+/* Save Success Alert */
+.policy-save-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.4rem;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #a7f3d0;
+  font-size: 0.88rem;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+}
+
+.policy-save-meta {
+  color: #6ee7b7;
+  font-size: 0.8rem;
+}
+
+/* Access Denied Card */
+.policy-access-denied-card {
+  max-width: 640px;
+  margin: 4rem auto;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  border-radius: 20px;
+  border: 1px solid rgba(244, 63, 94, 0.25);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(24px);
+}
+
+.access-denied-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+}
+
+.access-denied-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
+}
+
+.access-denied-desc {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.badge-user-role {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.access-denied-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.2rem;
+  border-radius: 12px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  color: #a5f3fc;
+  font-size: 0.84rem;
+  margin-bottom: 2rem;
+}
+
+.access-denied-actions {
+  display: flex;
+  justify-content: center;
+}

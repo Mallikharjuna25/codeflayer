@@ -1,0 +1,217 @@
+/* -------------------------------------------------------------------------
+   HYPERSPEED HERO - PROPER TOOL TITLE ALIGNMENT FOR HALO
+-------------------------------------------------------------------------- */
+
+.hyperspeed-hero-container {
+  position: relative;
+  width: 100%;
+  min-height: 560px;
+  height: 600px;
+  background: #06070d;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 25px 80px -15px rgba(0, 0, 0, 0.95),
+    0 0 50px -15px rgba(3, 179, 195, 0.15);
+  overflow: hidden;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+  cursor: pointer;
+}
+
+.hyperspeed-canvas-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Centered Content Stage */
+.hyperspeed-hero-content-stage {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+}
+
+.halo-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  pointer-events: auto;
+  max-width: 780px;
+  animation: heroFadeIn 0.4s ease-out;
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Badge Identifier */
+.halo-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+  padding: 0.22rem 0.85rem 0.22rem 0.3rem;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  margin-bottom: 1.15rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.halo-badge-tag {
+  background: #ffffff;
+  color: #070913;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.18rem 0.55rem;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
+}
+
+.halo-badge-text {
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding-right: 0.35rem;
+}
+
+/* Main Tool Name: HALO */
+.halo-title-name {
+  font-size: clamp(3.6rem, 7.5vw, 5.8rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9);
+}
+
+/* Subtitle / Tagline */
+.halo-title-tagline {
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 40%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0.65rem 0 0.5rem 0;
+  text-align: center;
+}
+
+/* Description */
+.halo-title-description {
+  font-size: clamp(0.92rem, 1.5vw, 1.05rem);
+  color: #94a3b8;
+  line-height: 1.6;
+  max-width: 660px;
+  margin: 0 0 1.75rem 0;
+  text-align: center;
+  font-weight: 400;
+}
+
+/* CTA Buttons */
+.halo-title-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+}
+
+.halo-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  color: #070913;
+  border: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 0.72rem 1.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.halo-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+  background: #f8fafc;
+}
+
+.halo-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 0.72rem 1.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.halo-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .hyperspeed-hero-container {
+    min-height: 480px;
+    height: 520px;
+  }
+
+  .hyperspeed-hero-content-stage {
+    padding: 1.5rem 1rem;
+  }
+
+  .halo-title-name {
+    font-size: 3.2rem;
+  }
+
+  .halo-title-tagline {
+    font-size: 1.1rem;
+  }
+
+  .halo-title-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .halo-btn-primary,
+  .halo-btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}

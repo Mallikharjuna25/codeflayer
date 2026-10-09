@@ -37,9 +37,15 @@ DEFAULT_RED_FLAG_PATTERNS: List[str] = [
     r"\bgrant\s+admin\b",
     r"\b(dump|leak|steal|extract)\s+(passwords?|credentials?|secrets?|keys?|tokens?|hash)\b",
 
-    # 4. Sensitive Data Exfiltration
-    r"\b(export|dump|exfiltrate)\s+(all\s+)?(users|database|passwords|credit\s+cards|ssn)\b",
+    # 4. Sensitive Data Exfiltration & Destruction
+    r"\b(export|dump|exfiltrate)\s+(all\s+)?(users|database|passwords|credit\s+cards|ssn|customer\s+pii|pii)\b",
+    r"\b(export|leak|dump)\s+(customer\s+)?pii\b",
     r"\bapi[_-]?key\s*[:=]\s*['\"][a-zA-Z0-9_-]{16,}['\"]",
+    r"\b(delete|destroy|wipe)\s+(all\s+)?(files|database|records|tables)\b",
+    r"\brm\s+-(rf|fr|r)\b",
+    r"\bchmod\s+777\b",
+    r"\b/etc/passwd\b",
+    r"\b\.env\b",
 ]
 
 DEFAULT_CLASSIFICATION_PROMPT = """You are a real-time safety and triage classifier.

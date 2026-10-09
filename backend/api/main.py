@@ -21,15 +21,17 @@ from core.safety_scaffold import scan_for_flags
 from core.database import init_db, SessionLocal
 from core.seed import seed_database
 from core.voice_engine import transcribe_audio, process_voice_agent_dialogue
+from core.session_audits import record_session_audit, get_session_audits, seed_default_audits
 from api.governance_routes import router as governance_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize database tables and seed records
+    # Initialize database tables, seed records, and session audits
     init_db()
     db = SessionLocal()
     try:
         seed_database(db)
+        seed_default_audits()
     finally:
         db.close()
     yield
@@ -318,3 +320,299 @@ def get_rag_stats():
     coll = get_chroma_collection()
     count = coll.count() if coll else 0
     return {"status": "ok", "total_chunks": count}
+
+# ---------------------------------------------------------------------------
+# 3-Tier Gateway AI Chatbot Endpoint & Session Auditing
+# ---------------------------------------------------------------------------
+class GatewayProcessRequest(BaseModel):
+    query: str = Field(..., min_length=1)
+    user_context: Optional[str] = ""
+    role: Optional[str] = "employee"
+    user_email: Optional[str] = "user@company.com"
+    user_name: Optional[str] = "Enterprise User"
+    company_id: Optional[str] = "acme"
+    company_name: Optional[str] = "Acme Corporation"
+    session_id: Optional[str] = None
+    attachments: Optional[List[Dict[str, Any]]] = None
+
+class GatewayProcessResponse(BaseModel):
+    status: str  # "ALLOWED", "BLOCKED", "ESCALATED"
+    response: str
+    provider_used: str
+    sources: List[str] = Field(default_factory=list)
+    tier_0: Dict[str, Any]
+    tier_1: Dict[str, Any]
+    tier_2: Dict[str, Any]
+    execution_time_ms: float
+    audit_id: Optional[str] = None
+
+@app.post("/api/gateway/process", response_model=GatewayProcessResponse)
+def gateway_process_endpoint(req: GatewayProcessRequest):
+    """
+    Integrated Three-Tier AI Agent Gateway Checkpoint with Immutable Session Audit Logging:
+    - Tier 0: Deterministic Safety & Tool Policy Gate (<1ms local check)
+    - Tier 1: Context, Risk & Blast Radius Provenance Check
+    - Tier 2: Vector Grounding & Groq/Gemini Multi-Provider Synthesis
+    - Audit Trail: Immutable SHA-256 chained session log recorded for compliance.
+    """
+    start_time = time.perf_counter()
+    query_text = req.query.strip()
+    user_email = req.user_email or "user@company.com"
+    user_name = req.user_name or "Enterprise User"
+    user_role = req.role or "employee"
+    company_id = req.company_id or "acme"
+    company_name = req.company_name or "Acme Corporation"
+
+    # --- TIER 0: Deterministic Policy Gate ---
+    t0_start = time.perf_counter()
+    is_flagged, trigger = scan_for_flags(query_text)
+    t0_elapsed = round((time.perf_counter() - t0_start) * 1000, 2)
+
+    if is_flagged:
+        total_ms = round((time.perf_counter() - start_time) * 1000, 2)
+        resp_msg = f"🛑 [GATEWAY INTERCEPT - TIER 0 BLOCK] Security policy violation detected: '{trigger}'. Action halted before execution. Zero unauthorized changes were made."
+        t0_data = {
+            "passed": False,
+            "decision": "BLOCK",
+            "trigger": trigger,
+            "latency_ms": t0_elapsed,
+            "policy_code": "POL-TIER0-ENFORCEMENT"
+        }
+        t1_data = {
+            "risk_level": "CRITICAL",
+            "blast_radius": "Intercepted at local perimeter",
+            "provenance": "Untrusted / Adversarial Threat Pattern"
+        }
+        t2_data = {
+            "status": "BYPASSED",
+            "reason": "Hard deterministic block cannot be overridden by semantic LLM."
+        }
+
+        # Record audit log
+        audit_record = record_session_audit(
+            user_email=user_email,
+            user_name=user_name,
+            user_role=user_role,
+            company_id=company_id,
+            company_name=company_name,
+            query=query_text,
+            status="BLOCKED",
+            provider="Tier-0 Local Deterministic Shield",
+            tier_0=t0_data,
+            tier_1=t1_data,
+            tier_2=t2_data,
+            execution_time_ms=total_ms,
+            response=resp_msg,
+            sources=[],
+            attachments=req.attachments,
+            session_id=req.session_id
+        )
+
+        return GatewayProcessResponse(
+            status="BLOCKED",
+            response=resp_msg,
+            provider_used="Tier-0 Local Deterministic Shield",
+            sources=[],
+            tier_0=t0_data,
+            tier_1=t1_data,
+            tier_2=t2_data,
+            execution_time_ms=total_ms,
+            audit_id=audit_record.get("id")
+        )
+
+    # --- TIER 1: Blast Radius & Egress Perimeter ---
+    lower_query = query_text.lower()
+    is_external = any(kw in lower_query for kw in ["external", "egress", "outside", "partner", "investor", "board@"])
+    risk_level = "HIGH" if is_external else "LOW"
+    blast_radius = "External network perimeter (Supervisor signoff recommended)" if is_external else "Read-only isolated local context"
+
+    tier_1_data = {
+        "risk_level": risk_level,
+        "blast_radius": blast_radius,
+        "provenance": f"Verified Internal Role: {user_role}"
+    }
+
+    # Role-based restriction: Employee trying to perform administrative/root/financial payout actions
+    if user_role == "employee" and any(kw in lower_query for kw in ["admin override", "sudo", "payout", "transfer funds", "delete user"]):
+        total_ms = round((time.perf_counter() - start_time) * 1000, 2)
+        resp_msg = "🛑 [GATEWAY INTERCEPT - TIER 0 BLOCK] Role restriction: Employee role lacks administrative clearance for financial payouts or root actions."
+        t0_data = {
+            "passed": False,
+            "decision": "BLOCK",
+            "trigger": "Insufficient Role Permissions",
+            "latency_ms": t0_elapsed,
+            "policy_code": "RBAC-CLEARANCE-FAIL"
+        }
+        t2_data = {
+            "status": "BYPASSED",
+            "reason": "RBAC clearance violation"
+        }
+
+        audit_record = record_session_audit(
+            user_email=user_email,
+            user_name=user_name,
+            user_role=user_role,
+            company_id=company_id,
+            company_name=company_name,
+            query=query_text,
+            status="BLOCKED",
+            provider="Tier-0 RBAC Enforcer",
+            tier_0=t0_data,
+            tier_1=tier_1_data,
+            tier_2=t2_data,
+            execution_time_ms=total_ms,
+            response=resp_msg,
+            sources=[],
+            attachments=req.attachments,
+            session_id=req.session_id
+        )
+
+        return GatewayProcessResponse(
+            status="BLOCKED",
+            response=resp_msg,
+            provider_used="Tier-0 RBAC Enforcer",
+            sources=[],
+            tier_0=t0_data,
+            tier_1=tier_1_data,
+            tier_2=t2_data,
+            execution_time_ms=total_ms,
+            audit_id=audit_record.get("id")
+        )
+
+    # --- TIER 2: Chroma Vector Retrieval & LLM Synthesis ---
+    chunks = retrieve(query_text, k=3, max_distance=0.75)
+    context_str = "\n\n".join([f"[{c.source_file}]:\n{c.text}" for c in chunks]) if chunks else "No specific guideline chunks found."
+    source_files = list(dict.fromkeys([c.source_file for c in chunks]))
+
+    system_prompt = (
+        "You are the Halo 3-Tier AI Agent Gateway Assistant. "
+        "You operate as an intelligent secure gateway between the user and external tools. "
+        "Ground your advice strictly on verified context.\n\n"
+        f"VERIFIED COMPANY POLICY & GUIDELINES CONTEXT:\n{context_str}"
+    )
+    llm_res = call_llm(system_prompt=system_prompt, user_prompt=query_text)
+    total_ms = round((time.perf_counter() - start_time) * 1000, 2)
+
+    final_status = "ESCALATED" if is_external else "ALLOWED"
+    final_response = llm_res.text if llm_res.success else f"Fallback synthesis (vector grounded): {chunks[0].text if chunks else 'System operational.'}"
+    final_provider = llm_res.provider_used if llm_res.success else "Local ChromaDB Fallback"
+
+    t0_data = {"passed": True, "decision": "ALLOW", "latency_ms": t0_elapsed, "policy_code": "POL-CLEAN-PASS"}
+    t2_data = {"status": "SYNTHESIZED", "provider": final_provider}
+
+    audit_record = record_session_audit(
+        user_email=user_email,
+        user_name=user_name,
+        user_role=user_role,
+        company_id=company_id,
+        company_name=company_name,
+        query=query_text,
+        status=final_status,
+        provider=final_provider,
+        tier_0=t0_data,
+        tier_1=tier_1_data,
+        tier_2=t2_data,
+        execution_time_ms=total_ms,
+        response=final_response,
+        sources=source_files,
+        attachments=req.attachments,
+        session_id=req.session_id
+    )
+
+    return GatewayProcessResponse(
+        status=final_status,
+        response=final_response,
+        provider_used=final_provider,
+        sources=source_files,
+        tier_0=t0_data,
+        tier_1=tier_1_data,
+        tier_2=t2_data,
+        execution_time_ms=total_ms,
+        audit_id=audit_record.get("id")
+    )
+
+# ---------------------------------------------------------------------------
+# Gateway Session Audit Endpoints (RBAC Enforced)
+# ---------------------------------------------------------------------------
+@app.get("/api/gateway/audits")
+def get_gateway_audits_endpoint(
+    user_email: str = "user@company.com",
+    role: str = "employee",
+    filter_user: Optional[str] = None,
+    filter_status: Optional[str] = None,
+    search: Optional[str] = None,
+    limit: int = 150
+):
+    """
+    Retrieves gateway session audits with strict RBAC enforcement:
+    - Administrators ('company_admin') can inspect all users' sessions across the enterprise.
+    - Regular employees can strictly ONLY view their own sessions.
+    """
+    return get_session_audits(
+        requester_email=user_email,
+        requester_role=role,
+        filter_user=filter_user,
+        filter_status=filter_status,
+        search=search,
+        limit=limit
+    )
+
+@app.delete("/api/gateway/audits/clear")
+def clear_gateway_audits_endpoint(user_email: str = "user@company.com", role: str = "employee"):
+    """Re-seeds or resets audit history."""
+    seed_default_audits()
+    return {"status": "ok", "message": "Audits reset to verified cryptographic baseline."}
+
+# ---------------------------------------------------------------------------
+# Policy .md File Management Endpoints (for Administrator)
+# ---------------------------------------------------------------------------
+class UpdatePolicyMdRequest(BaseModel):
+    content: str
+    filename: Optional[str] = "sample_guidelines.md"
+    change_summary: Optional[str] = "Updated policy guidelines via web editor."
+
+@app.get("/api/policy/current-md")
+def get_current_policy_md(filename: Optional[str] = "sample_guidelines.md"):
+    """Returns the current policy markdown content from KNOWLEDGE_DIR."""
+    target = KNOWLEDGE_DIR / filename
+    if not target.exists():
+        md_files = list(KNOWLEDGE_DIR.glob("*.md"))
+        if md_files:
+            target = md_files[0]
+        else:
+            return {
+                "status": "ok",
+                "filename": filename,
+                "content": "# Corporate Policy Guidelines\n\nNo policy documents found.",
+                "total_chunks": 0
+            }
+
+    text = target.read_text(encoding="utf-8", errors="replace")
+    coll = get_chroma_collection()
+    chunks_count = coll.count() if coll else 0
+    return {
+        "status": "ok",
+        "filename": target.name,
+        "content": text,
+        "total_chunks": chunks_count,
+        "last_modified": time.ctime(target.stat().st_mtime)
+    }
+
+@app.post("/api/policy/update-md")
+def update_policy_md(req: UpdatePolicyMdRequest):
+    """
+    Administrator endpoint: Overwrites the policy .md file and re-indexes into ChromaDB vector store.
+    """
+    KNOWLEDGE_DIR.mkdir(parents=True, exist_ok=True)
+    target = KNOWLEDGE_DIR / (req.filename or "sample_guidelines.md")
+    target.write_text(req.content, encoding="utf-8")
+
+    # Re-index chunks into ChromaDB
+    chunks_ingested = ingest_knowledge(str(KNOWLEDGE_DIR))
+
+    return {
+        "status": "success",
+        "message": f"Successfully updated '{target.name}' and re-indexed {chunks_ingested} chunks into 3-Tier Gateway vector store.",
+        "chunks_ingested": chunks_ingested,
+        "filename": target.name
+    }

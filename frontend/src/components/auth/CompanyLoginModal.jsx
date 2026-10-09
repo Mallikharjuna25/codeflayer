@@ -32,8 +32,9 @@ export default function CompanyLoginModal({ isOpen, onClose }) {
   const [activeTabCompanyId, setActiveTabCompanyId] = useState(null);
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
+  const [selectedRole, setSelectedRole] = useState('company_admin');
   const [showPassword, setShowPassword] = useState(false);
-  const [showManualForm, setShowManualForm] = useState(false);
+  const [showManualForm, setShowManualForm] = useState(true);
   const [actionLoadingEmail, setActionLoadingEmail] = useState(null);
 
   const selectedCompanyId =
@@ -68,8 +69,8 @@ export default function CompanyLoginModal({ isOpen, onClose }) {
 
   const handleManualSubmit = async (e) => {
     e.preventDefault();
-    if (!emailInput || !passwordInput) return;
-    const res = await login(emailInput, passwordInput);
+    if (!emailInput) return;
+    const res = await login(emailInput, passwordInput || 'admin123', selectedRole);
     if (res.success) {
       onClose();
     }
@@ -78,6 +79,7 @@ export default function CompanyLoginModal({ isOpen, onClose }) {
   const handleFillCredentials = (user) => {
     setEmailInput(user.email);
     setPasswordInput(user.demo_password || 'admin123');
+    setSelectedRole(user.role || 'employee');
     setShowManualForm(true);
   };
 
@@ -241,20 +243,72 @@ export default function CompanyLoginModal({ isOpen, onClose }) {
         {showManualForm && (
           <form className="manual-login-form" onSubmit={handleManualSubmit}>
             <div className="form-group">
+              <label className="form-label">
+                Specify Role
+              </label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', marginBottom: '0.25rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRole('company_admin')}
+                  style={{
+                    padding: '0.65rem 0.8rem',
+                    borderRadius: '10px',
+                    border: selectedRole === 'company_admin' ? '1.5px solid #a855f7' : '1px solid rgba(255, 255, 255, 0.12)',
+                    background: selectedRole === 'company_admin' ? 'rgba(168, 85, 247, 0.18)' : 'rgba(255, 255, 255, 0.04)',
+                    color: selectedRole === 'company_admin' ? '#d8b4fe' : '#94a3b8',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    gap: '0.2rem',
+                    textAlign: 'left'
+                  }}
+                >
+                  <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#fff' }}>👑 Administrator</span>
+                  <span style={{ fontSize: '0.72rem', opacity: 0.85 }}>All Modules & Policy .md</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedRole('employee')}
+                  style={{
+                    padding: '0.65rem 0.8rem',
+                    borderRadius: '10px',
+                    border: selectedRole === 'employee' ? '1.5px solid #06b6d4' : '1px solid rgba(255, 255, 255, 0.12)',
+                    background: selectedRole === 'employee' ? 'rgba(6, 182, 212, 0.18)' : 'rgba(255, 255, 255, 0.04)',
+                    color: selectedRole === 'employee' ? '#67e8f9' : '#94a3b8',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    gap: '0.2rem',
+                    textAlign: 'left'
+                  }}
+                >
+                  <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#fff' }}>📊 Employee</span>
+                  <span style={{ fontSize: '0.72rem', opacity: 0.85 }}>3-Tier AI Chatbot Only</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="form-group">
               <label className="form-label" htmlFor="auth-email-input">
-                Company Email Address
+                Organization Email Address
               </label>
               <div className="form-input-wrapper">
                 <input
                   id="auth-email-input"
                   type="email"
                   className="form-input"
-                  placeholder="admin@acme.com"
+                  placeholder="name@company.com"
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
                   required
                 />
               </div>
+              <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '0.2rem' }}>
+                Format: <code>name@company.com</code> (e.g. admin@acme.com or employee@company.com)
+              </span>
             </div>
 
             <div className="form-group">

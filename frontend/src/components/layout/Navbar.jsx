@@ -12,7 +12,6 @@ import {
   ChevronDown,
   ArrowUpRight,
   Search,
-  LifeBuoy,
   Lock,
   ExternalLink,
   CheckCircle2,
@@ -20,17 +19,55 @@ import {
   Building2,
   Users,
   LogOut,
-  UserCheck
+  UserCheck,
+  FileText,
+  Bot
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import CompanyLoginModal from '../auth/CompanyLoginModal';
 import './Navbar.css';
 
-const PRODUCT_MODULES = [
-  { path: '/chat', label: 'AI Copilot (RAG)', desc: 'Ground queries in local ChromaDB knowledge with sub-second latency.', icon: MessageSquareCode, badge: 'Live' },
-  { path: '/extract', label: 'Multimodal Studio', desc: 'Strict Pydantic JSON extraction from voice agent audio, text, and document scans.', icon: ScanSearch, badge: 'Voice • Vision' },
-  { path: '/knowledge', label: 'Vector Vault', desc: 'Local vector memory with sentence-transformers embedding.', icon: Database },
-  { path: '/resilience', label: 'Cascade & Resilience', desc: 'Tier-0 safety interceptor and automatic dual-provider failover.', icon: ShieldCheck, badge: 'Zero 500s' },
+const ALL_PRODUCT_MODULES = [
+  {
+    path: '/chat',
+    label: 'AI Chatbot (3-Tier Gateway)',
+    desc: 'Autonomous 3-tier security gate: Tier 0 (<1ms regex/blacklist), Tier 1 (blast radius), Tier 2 (ChromaDB + Groq/Gemini cascade).',
+    icon: Bot,
+    badge: '3-Tier Gateway',
+    forAll: true
+  },
+  {
+    path: '/policy',
+    label: 'Policy Management (.md)',
+    desc: 'Live Markdown policy editor and ChromaDB re-indexing. Direct in-browser policy compiling.',
+    icon: FileText,
+    badge: '👑 Admin Live Sync',
+    adminOnly: true
+  },
+  {
+    path: '/extract',
+    label: 'Multimodal Studio',
+    desc: 'Strict Pydantic JSON extraction from voice agent audio, text, and document scans.',
+    icon: ScanSearch,
+    badge: 'Voice • Vision',
+    adminOnly: true
+  },
+  {
+    path: '/knowledge',
+    label: 'Vector Vault',
+    desc: 'Local vector memory with sentence-transformers embedding.',
+    icon: Database,
+    badge: 'ChromaDB',
+    adminOnly: true
+  },
+  {
+    path: '/resilience',
+    label: 'Cascade & Resilience',
+    desc: 'Tier-0 safety interceptor and automatic dual-provider failover.',
+    icon: ShieldCheck,
+    badge: 'Zero 500s',
+    adminOnly: true
+  },
 ];
 
 export default function Navbar() {
@@ -41,7 +78,8 @@ export default function Navbar() {
     setLoginModalOpen,
     logout,
     quickLoginAs,
-    companies
+    companies,
+    isAdmin
   } = useAuth();
 
   const [isOnline, setIsOnline] = useState(false);
@@ -49,7 +87,6 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [productsDropdownOpen, setProductsDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [supportModalOpen, setSupportModalOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -101,6 +138,9 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Filter products based on role
+  const displayModules = ALL_PRODUCT_MODULES.filter((m) => isAdmin || m.forAll);
+
   return (
     <>
       <header className="openai-nav-header">
@@ -117,81 +157,90 @@ export default function Navbar() {
                 Overview
               </NavLink>
 
-              {/* Products Dropdown */}
-              <div className="nav-dropdown-wrapper" ref={dropdownRef}>
-                <button
-                  className={`openai-link dropdown-trigger ${productsDropdownOpen ? 'active' : ''}`}
-                  onClick={() => setProductsDropdownOpen(!productsDropdownOpen)}
-                  aria-expanded={productsDropdownOpen}
+              {/* For Non-Admins (Employees): Direct Link to 3-Tier AI Chatbot Only */}
+              {!isAdmin && (
+                <NavLink
+                  to="/chat"
+                  className={({ isActive }) => `openai-link flex-align gap-1 ${isActive ? 'active' : ''}`}
+                  style={{ color: '#38bdf8', fontWeight: 600 }}
                 >
-                  <span>Products</span>
-                  <ChevronDown size={14} className={`dropdown-chevron ${productsDropdownOpen ? 'open' : ''}`} />
-                </button>
+                  <Bot size={14} className="text-cyan" />
+                  <span>AI Chatbot (3-Tier Gateway)</span>
+                </NavLink>
+              )}
 
-                {productsDropdownOpen && (
-                  <div className="openai-products-dropdown">
-                    <div className="dropdown-header-label">PLATFORM MODULES</div>
-                    <div className="dropdown-grid">
-                      {PRODUCT_MODULES.map((item) => {
-                        const Icon = item.icon;
-                        return (
-                          <Link
-                            key={item.path}
-                            to={item.path}
-                            className="dropdown-item"
-                            onClick={() => setProductsDropdownOpen(false)}
-                          >
-                            <div className="dropdown-item-icon">
-                              <Icon size={16} />
-                            </div>
-                            <div className="dropdown-item-info">
-                              <div className="dropdown-item-title-row">
-                                <span className="dropdown-item-title">{item.label}</span>
-                                {item.badge && <span className="dropdown-item-pill">{item.badge}</span>}
-                              </div>
-                              <span className="dropdown-item-desc">{item.desc}</span>
-                            </div>
-                          </Link>
-                        );
-                      })}
-                    </div>
+              {/* Administrator Only Navigation: All Features Dropdown, Policy .md, and Governance */}
+              {isAdmin && (
+                <>
+                  <NavLink
+                    to="/chat"
+                    className={({ isActive }) => `openai-link flex-align gap-1 ${isActive ? 'active' : ''}`}
+                  >
+                    <Bot size={14} className="text-cyan" />
+                    <span>AI Chatbot</span>
+                  </NavLink>
+
+                  <div className="nav-dropdown-wrapper" ref={dropdownRef}>
+                    <button
+                      className={`openai-link dropdown-trigger ${productsDropdownOpen ? 'active' : ''}`}
+                      onClick={() => setProductsDropdownOpen(!productsDropdownOpen)}
+                      aria-expanded={productsDropdownOpen}
+                    >
+                      <span>All Features</span>
+                      <ChevronDown size={14} className={`dropdown-chevron ${productsDropdownOpen ? 'open' : ''}`} />
+                    </button>
+
+                    {productsDropdownOpen && (
+                      <div className="openai-products-dropdown">
+                        <div className="dropdown-header-label">
+                          ADMINISTRATOR PLATFORM MODULES
+                        </div>
+                        <div className="dropdown-grid">
+                          {ALL_PRODUCT_MODULES.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                              <Link
+                                key={item.path}
+                                to={item.path}
+                                className="dropdown-item"
+                                onClick={() => setProductsDropdownOpen(false)}
+                              >
+                                <div className="dropdown-item-icon">
+                                  <Icon size={16} />
+                                </div>
+                                <div className="dropdown-item-info">
+                                  <div className="dropdown-item-title-row">
+                                    <span className="dropdown-item-title">{item.label}</span>
+                                    {item.badge && <span className="dropdown-item-pill">{item.badge}</span>}
+                                  </div>
+                                  <span className="dropdown-item-desc">{item.desc}</span>
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              <NavLink to="/resilience" className={({ isActive }) => `openai-link ${isActive ? 'active' : ''}`}>
-                Governance
-              </NavLink>
+                  <NavLink
+                    to="/policy"
+                    className={({ isActive }) => `openai-link flex-align gap-1 ${isActive ? 'active' : ''}`}
+                    style={{ color: '#d8b4fe', fontWeight: 600 }}
+                    title="Edit and Live-Publish Policy Markdown Document"
+                  >
+                    <FileText size={14} className="text-purple" />
+                    <span>Policy (.md)</span>
+                    <span style={{ fontSize: '0.65rem', background: 'rgba(168,85,247,0.2)', padding: '0.1rem 0.35rem', borderRadius: '4px', border: '1px solid rgba(168,85,247,0.4)' }}>
+                      Admin
+                    </span>
+                  </NavLink>
 
-              <a
-                href="http://localhost:8000/docs"
-                target="_blank"
-                rel="noreferrer"
-                className="openai-link flex-align gap-1"
-                title="Open FastAPI Swagger Documentation"
-              >
-                <span>Developers</span>
-                <ArrowUpRight size={13} className="text-muted" />
-              </a>
-
-              <a
-                href="#about"
-                className="openai-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector('.about-enterprise-card')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Company
-              </a>
-
-              {/* Support link */}
-              <button
-                className="openai-link btn-link"
-                onClick={() => setSupportModalOpen(true)}
-              >
-                Support
-              </button>
+                  <NavLink to="/resilience" className={({ isActive }) => `openai-link ${isActive ? 'active' : ''}`}>
+                    Governance
+                  </NavLink>
+                </>
+              )}
 
               {/* Search Icon Trigger */}
               <button
@@ -205,23 +254,13 @@ export default function Navbar() {
             </nav>
           </div>
 
-          {/* Right Action Buttons: Support, Log In, Try Halo */}
+          {/* Right Action Buttons: Live Telemetry, Company Logins, Try Halo */}
           <div className="openai-nav-right">
             {/* SLA Live Telemetry Pill */}
             <div className="nav-sla-badge" title="Verified Tier-0 Availability">
               <span className={`status-indicator-dot ${isOnline ? 'online' : 'offline'}`} />
               <span className="sla-text">{isOnline ? `${latency || 12}ms` : 'Offline'}</span>
             </div>
-
-            {/* Support Button */}
-            <button
-              className="openai-support-btn"
-              onClick={() => setSupportModalOpen(true)}
-              aria-label="Open Support Portal"
-            >
-              <LifeBuoy size={14} />
-              <span>Support</span>
-            </button>
 
             {/* Company User Profile Button or Log In Button */}
             {currentUser ? (
@@ -404,20 +443,29 @@ export default function Navbar() {
         {mobileMenuOpen && (
           <div className="openai-mobile-menu">
             <NavLink to="/" end className="mobile-item">Overview</NavLink>
-            <div className="mobile-divider" />
-            <div className="mobile-section-label">PRODUCTS</div>
-            {PRODUCT_MODULES.map((item) => (
-              <Link key={item.path} to={item.path} className="mobile-sub-item">
-                <span>{item.label}</span>
-                {item.badge && <span className="mobile-pill">{item.badge}</span>}
-              </Link>
-            ))}
-            <div className="mobile-divider" />
-            <NavLink to="/resilience" className="mobile-item">Governance</NavLink>
-            <a href="http://localhost:8000/docs" target="_blank" rel="noreferrer" className="mobile-item">
-              Developers <ArrowUpRight size={14} />
-            </a>
-            <button className="mobile-item" onClick={() => setSupportModalOpen(true)}>Support</button>
+            
+            {!isAdmin ? (
+              <NavLink to="/chat" className="mobile-item" style={{ color: '#38bdf8', fontWeight: 600 }}>
+                AI Chatbot (3-Tier Gateway)
+              </NavLink>
+            ) : (
+              <>
+                <div className="mobile-divider" />
+                <div className="mobile-section-label">ADMINISTRATOR MODULES</div>
+                {ALL_PRODUCT_MODULES.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className="mobile-sub-item"
+                  >
+                    <span>{item.label}</span>
+                    {item.badge && <span className="mobile-pill">{item.badge}</span>}
+                  </Link>
+                ))}
+                <div className="mobile-divider" />
+                <NavLink to="/resilience" className="mobile-item">Governance</NavLink>
+              </>
+            )}
             
             <div className="mobile-auth-actions">
               {currentUser ? (
@@ -452,54 +500,6 @@ export default function Navbar() {
           COMPANY LOGIN MODAL (Interactive Company Directory & Quick Switcher)
       -------------------------------------------------------------------- */}
       <CompanyLoginModal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
-
-      {/* -------------------------------------------------------------------
-          SUPPORT MODAL (Clean OpenAI Style)
-      -------------------------------------------------------------------- */}
-      {supportModalOpen && (
-        <div className="modal-backdrop" onClick={() => setSupportModalOpen(false)}>
-          <div className="openai-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header-row">
-              <div className="modal-brand-title">
-                <LifeBuoy size={20} className="text-cyan" />
-                <span className="modal-logo">Halo Support</span>
-              </div>
-              <button className="modal-close-btn" onClick={() => setSupportModalOpen(false)}>
-                <X size={18} />
-              </button>
-            </div>
-
-            <p className="modal-desc">
-              Need assistance configuring agent boundaries, debugging tool intercept policies, or provisioning vector storage?
-            </p>
-
-            <div className="support-cards-grid">
-              <a
-                href="http://localhost:8000/docs"
-                target="_blank"
-                rel="noreferrer"
-                className="support-grid-card"
-              >
-                <h4>Developer API Docs</h4>
-                <p>Interactive OpenAPI & Swagger specifications for all runtime endpoints.</p>
-                <span className="support-card-link">View Swagger ➔</span>
-              </a>
-
-              <Link to="/resilience" className="support-grid-card" onClick={() => setSupportModalOpen(false)}>
-                <h4>Resilience & Safety Sentinel</h4>
-                <p>Simulate provider failovers and inspect real-time safety scanning.</p>
-                <span className="support-card-link">Run Sentinel ➔</span>
-              </Link>
-            </div>
-
-            <div className="support-contact-box">
-              <span className="contact-label">Live SLA Status:</span>
-              <span className="text-emerald font-semibold">99.98% System Availability</span>
-              <span className="text-muted">· 24/7 Enterprise Dedicated Engineering Support</span>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

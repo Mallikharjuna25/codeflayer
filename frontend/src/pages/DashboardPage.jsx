@@ -25,11 +25,14 @@ import {
   Bot,
   UserCheck,
   Terminal,
-  Users
+  Users,
+  FileText
 } from 'lucide-react';
-import SpiralGalaxy from '../components/galaxy/SpiralGalaxy';
+import HyperspeedHero from '../components/hyperspeed/HyperspeedHero';
+import { useAuth } from '../context/AuthContext';
 
 export default function DashboardPage() {
+  const { currentUser, currentCompany, isAdmin, setLoginModalOpen } = useAuth();
   const [orbState, setOrbState] = useState('idle'); // 'idle' | 'analyzing' | 'approval_required' | 'blocked'
   const [activeTool, setActiveTool] = useState(null);
   const [isSimulating, setIsSimulating] = useState(false);
@@ -154,20 +157,10 @@ export default function DashboardPage() {
   return (
     <div className="apg-main-viewport">
       {/* -------------------------------------------------------------------
-          1. OPENAI-STYLE SPIRAL GALAXY HERO (Exact Visual Match)
-             Featuring center animated dual-arm spiral galaxy, flanked by
-             HALO on left and Astra on right, with docked quote & reload button
+          1. REACT BITS HYPERSPEED HERO
+             High-speed 3D WebGL warp speed highway with centered HALO intelligence
       -------------------------------------------------------------------- */}
-      <SpiralGalaxy
-        onStateToggle={(nextView) => {
-          if (nextView === 'governance') {
-            handleStateChange('analyzing');
-          } else {
-            handleStateChange('idle');
-          }
-        }}
-        currentState={orbState === 'idle' ? 'halo' : 'governance'}
-      />
+      <HyperspeedHero />
 
       {/* -------------------------------------------------------------------
           2. INTERACTION STATE DISPLAY
@@ -263,77 +256,243 @@ export default function DashboardPage() {
       </div>
 
       {/* -------------------------------------------------------------------
-          PLATFORM MODULES (Matching Navbar Products Dropdown UI)
+          PLATFORM MODULES & ROLE ACCESS OVERVIEW
       -------------------------------------------------------------------- */}
       <div className="home-modules-section">
+        {/* Workspace Session Role Context Banner */}
+        <div
+          style={{
+            background: isAdmin
+              ? 'linear-gradient(90deg, rgba(168, 85, 247, 0.12), rgba(59, 130, 246, 0.08))'
+              : 'linear-gradient(90deg, rgba(6, 182, 212, 0.12), rgba(59, 130, 246, 0.06))',
+            border: isAdmin
+              ? '1px solid rgba(168, 85, 247, 0.25)'
+              : '1px solid rgba(6, 182, 212, 0.25)',
+            borderRadius: '12px',
+            padding: '0.85rem 1.25rem',
+            marginBottom: '1.25rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.75rem'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                background: isAdmin ? 'rgba(168, 85, 247, 0.2)' : 'rgba(6, 182, 212, 0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: isAdmin ? '#d8b4fe' : '#67e8f9'
+              }}
+            >
+              {isAdmin ? <ShieldCheck size={18} /> : <Bot size={18} />}
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#fff' }}>
+                  {currentUser?.full_name || 'Authenticated User'}
+                </span>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: '9999px',
+                    fontWeight: 600,
+                    background: isAdmin ? 'rgba(168, 85, 247, 0.25)' : 'rgba(6, 182, 212, 0.25)',
+                    color: isAdmin ? '#d8b4fe' : '#67e8f9',
+                    border: isAdmin ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid rgba(6, 182, 212, 0.4)'
+                  }}
+                >
+                  {isAdmin ? '👑 Administrator' : '📊 Employee'}
+                </span>
+                <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({currentUser?.email})</span>
+              </div>
+              <div style={{ fontSize: '0.76rem', color: '#94a3b8', marginTop: '0.15rem' }}>
+                {isAdmin
+                  ? 'Clearance: Full platform access & direct in-browser policy .md file editing.'
+                  : 'Clearance: Governed end-user — Authorized exclusively to use the Three-Tier AI Gateway Chatbot.'}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            {isAdmin ? (
+              <Link
+                to="/policy"
+                style={{
+                  fontSize: '0.8rem',
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '8px',
+                  background: 'rgba(168, 85, 247, 0.2)',
+                  border: '1px solid rgba(168, 85, 247, 0.4)',
+                  color: '#e9d5ff',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  fontWeight: 600
+                }}
+              >
+                <FileText size={13} />
+                <span>Edit Policy .md</span>
+              </Link>
+            ) : (
+              <Link
+                to="/chat"
+                style={{
+                  fontSize: '0.8rem',
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '8px',
+                  background: 'rgba(6, 182, 212, 0.2)',
+                  border: '1px solid rgba(6, 182, 212, 0.4)',
+                  color: '#a5f3fc',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  fontWeight: 600
+                }}
+              >
+                <Bot size={13} />
+                <span>Open 3-Tier Chatbot</span>
+              </Link>
+            )}
+            <button
+              onClick={() => setLoginModalOpen(true)}
+              style={{
+                fontSize: '0.8rem',
+                padding: '0.4rem 0.75rem',
+                borderRadius: '8px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: '#cbd5e1',
+                cursor: 'pointer'
+              }}
+            >
+              Switch Role
+            </button>
+          </div>
+        </div>
+
         <div className="home-modules-header">
           <span className="dropdown-header-label">PLATFORM MODULES</span>
           <span className="home-modules-sub">Core capabilities powered by Halo governance runtime</span>
         </div>
+
         <div className="home-modules-grid">
-          <Link to="/chat" className="home-module-card">
-            <div className="dropdown-item-icon">
-              <MessageSquareCode size={18} />
+          {/* Module 1: AI Chatbot (Three-Tier Gateway) - Featured for Everyone */}
+          <Link
+            to="/chat"
+            className="home-module-card"
+            style={{
+              borderColor: 'rgba(6, 182, 212, 0.35)',
+              background: 'linear-gradient(145deg, rgba(6, 182, 212, 0.08), rgba(15, 23, 42, 0.6))'
+            }}
+          >
+            <div className="dropdown-item-icon" style={{ background: 'rgba(6, 182, 212, 0.2)', color: '#38bdf8' }}>
+              <Bot size={18} />
             </div>
             <div className="dropdown-item-info">
               <div className="dropdown-item-title-row">
-                <span className="dropdown-item-title">AI Copilot (RAG)</span>
-                <span className="dropdown-item-pill">Live</span>
+                <span className="dropdown-item-title">AI Chatbot (3-Tier Gateway)</span>
+                <span className="dropdown-item-pill" style={{ background: 'rgba(6, 182, 212, 0.2)', color: '#67e8f9' }}>
+                  {isAdmin ? 'Active' : 'Authorized Tool'}
+                </span>
               </div>
               <span className="dropdown-item-desc">
-                Ground queries in local ChromaDB knowledge with sub-second latency.
+                Inline 3-tier security gate: Tier 0 (&lt;1ms local regex), Tier 1 (blast radius/provenance), Tier 2 (ChromaDB + Groq/Gemini cascade).
               </span>
             </div>
             <ArrowUpRight size={14} className="home-card-arrow" />
           </Link>
 
-          <Link to="/extract" className="home-module-card">
-            <div className="dropdown-item-icon">
-              <ScanSearch size={18} />
-            </div>
-            <div className="dropdown-item-info">
-              <div className="dropdown-item-title-row">
-                <span className="dropdown-item-title">Multimodal Studio</span>
-                <span className="dropdown-item-pill">Voice • Vision</span>
-              </div>
-              <span className="dropdown-item-desc">
-                Strict Pydantic JSON extraction from voice agent audio, text, and document scans.
-              </span>
-            </div>
-            <ArrowUpRight size={14} className="home-card-arrow" />
-          </Link>
+          {/* Administrator Only Modules: Completely omitted for non-admin employees */}
+          {isAdmin && (
+            <>
+              {/* Module 2: Policy Management (.md) */}
+              <Link
+                to="/policy"
+                className="home-module-card"
+                style={{
+                  borderColor: 'rgba(168, 85, 247, 0.35)',
+                  background: 'linear-gradient(145deg, rgba(168, 85, 247, 0.08), rgba(15, 23, 42, 0.6))'
+                }}
+              >
+                <div className="dropdown-item-icon" style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#d8b4fe' }}>
+                  <FileText size={18} />
+                </div>
+                <div className="dropdown-item-info">
+                  <div className="dropdown-item-title-row">
+                    <span className="dropdown-item-title">Policy Management (.md)</span>
+                    <span className="dropdown-item-pill" style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#d8b4fe' }}>
+                      👑 Admin Live Editor
+                    </span>
+                  </div>
+                  <span className="dropdown-item-desc">
+                    Live Markdown policy editor and ChromaDB re-indexing. Update corporate security rules directly via website.
+                  </span>
+                </div>
+                <ArrowUpRight size={14} className="home-card-arrow" />
+              </Link>
 
-          <Link to="/knowledge" className="home-module-card">
-            <div className="dropdown-item-icon">
-              <Database size={18} />
-            </div>
-            <div className="dropdown-item-info">
-              <div className="dropdown-item-title-row">
-                <span className="dropdown-item-title">Vector Vault</span>
-                <span className="dropdown-item-pill">ChromaDB</span>
-              </div>
-              <span className="dropdown-item-desc">
-                Local vector memory with sentence-transformers embedding.
-              </span>
-            </div>
-            <ArrowUpRight size={14} className="home-card-arrow" />
-          </Link>
+              {/* Module 3: Multimodal Studio */}
+              <Link to="/extract" className="home-module-card">
+                <div className="dropdown-item-icon">
+                  <ScanSearch size={18} />
+                </div>
+                <div className="dropdown-item-info">
+                  <div className="dropdown-item-title-row">
+                    <span className="dropdown-item-title">Multimodal Studio</span>
+                    <span className="dropdown-item-pill">Voice • Vision</span>
+                  </div>
+                  <span className="dropdown-item-desc">
+                    Strict Pydantic JSON extraction from voice agent audio, text, and document scans.
+                  </span>
+                </div>
+                <ArrowUpRight size={14} className="home-card-arrow" />
+              </Link>
 
-          <Link to="/resilience" className="home-module-card">
-            <div className="dropdown-item-icon">
-              <ShieldCheck size={18} />
-            </div>
-            <div className="dropdown-item-info">
-              <div className="dropdown-item-title-row">
-                <span className="dropdown-item-title">Cascade & Resilience</span>
-                <span className="dropdown-item-pill">Zero 500s</span>
-              </div>
-              <span className="dropdown-item-desc">
-                Tier-0 safety interceptor and automatic dual-provider failover.
-              </span>
-            </div>
-            <ArrowUpRight size={14} className="home-card-arrow" />
-          </Link>
+              {/* Module 4: Vector Vault */}
+              <Link to="/knowledge" className="home-module-card">
+                <div className="dropdown-item-icon">
+                  <Database size={18} />
+                </div>
+                <div className="dropdown-item-info">
+                  <div className="dropdown-item-title-row">
+                    <span className="dropdown-item-title">Vector Vault</span>
+                    <span className="dropdown-item-pill">ChromaDB</span>
+                  </div>
+                  <span className="dropdown-item-desc">
+                    Local vector memory with sentence-transformers embedding.
+                  </span>
+                </div>
+                <ArrowUpRight size={14} className="home-card-arrow" />
+              </Link>
+
+              {/* Module 5: Cascade & Resilience */}
+              <Link to="/resilience" className="home-module-card">
+                <div className="dropdown-item-icon">
+                  <ShieldCheck size={18} />
+                </div>
+                <div className="dropdown-item-info">
+                  <div className="dropdown-item-title-row">
+                    <span className="dropdown-item-title">Cascade & Resilience</span>
+                    <span className="dropdown-item-pill">Zero 500s</span>
+                  </div>
+                  <span className="dropdown-item-desc">
+                    Tier-0 safety interceptor and automatic dual-provider failover.
+                  </span>
+                </div>
+                <ArrowUpRight size={14} className="home-card-arrow" />
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
@@ -348,9 +507,9 @@ export default function DashboardPage() {
       <ActionTimeline onSelectAction={handleSelectTimelineAction} />
 
       {/* -------------------------------------------------------------------
-          8. MULTI-TIER ARCHITECTURE SPECIFICATION & ENTERPRISE USERS
+          8. MULTI-TIER ARCHITECTURE SPECIFICATION & ENTERPRISE ROLES
       -------------------------------------------------------------------- */}
-      <section className="about-enterprise-card enterprise-arch-section" id="about">
+      <section className="about-enterprise-card enterprise-arch-section">
         <div className="arch-section-header">
           <div className="dropdown-header-label">ZERO-DOWNTIME RUNTIME ARCHITECTURE</div>
           <h2 className="arch-section-title">Multi-Tier Permission & Inference Hierarchy</h2>

@@ -10,8 +10,10 @@ import {
   Lock,
   ArrowUpRight
 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Footer() {
+  const { isAdmin } = useAuth();
   return (
     <footer className="enterprise-footer">
       <div className="footer-container">
@@ -40,24 +42,33 @@ export default function Footer() {
             <ul className="footer-links-list">
               <li>
                 <Link to="/chat">
-                  <MessageSquareCode size={14} /> AI Copilot (RAG)
+                  <MessageSquareCode size={14} /> AI Chatbot (3-Tier Gateway)
                 </Link>
               </li>
-              <li>
-                <Link to="/extract">
-                  <ScanSearch size={14} /> Multimodal Vision Studio
-                </Link>
-              </li>
-              <li>
-                <Link to="/knowledge">
-                  <Database size={14} /> ChromaDB Vector Vault
-                </Link>
-              </li>
-              <li>
-                <Link to="/resilience">
-                  <ShieldCheck size={14} /> Cascade Failover Sentinel
-                </Link>
-              </li>
+              {isAdmin && (
+                <>
+                  <li>
+                    <Link to="/policy">
+                      <ScanSearch size={14} /> Policy Management (.md)
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/extract">
+                      <ScanSearch size={14} /> Multimodal Vision Studio
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/knowledge">
+                      <Database size={14} /> ChromaDB Vector Vault
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/resilience">
+                      <ShieldCheck size={14} /> Cascade Failover Sentinel
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
 
