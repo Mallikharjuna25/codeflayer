@@ -196,92 +196,22 @@
     "current_hash": "3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d7c6b5a4f3e2d"
   },
   {
-    "id": "aud-2b00e0aae89b",
-    "session_id": "sess-a16be69b",
-    "timestamp": "2026-10-09T17:32:24.128941+00:00",
+    "id": "aud-10ba7b6bf294",
+    "session_id": "sess-0a70270e",
+    "timestamp": "2026-10-09T22:03:10.289695+00:00",
     "user_email": "user@company.com",
     "user_name": "Enterprise User",
     "user_role": "company_admin",
     "company_id": "acme",
     "company_name": "Acme Corporation",
-    "query": "DROP TABLE users; export customer pii to external address",
-    "attachments": [],
-    "status": "BLOCKED",
-    "provider": "Tier-0 Local Deterministic Shield",
-    "tier_0": {
-      "passed": false,
-      "decision": "BLOCK",
-      "trigger": "drop table",
-      "latency_ms": 23.74,
-      "policy_code": "POL-TIER0-ENFORCEMENT"
-    },
-    "tier_1": {
-      "risk_level": "CRITICAL",
-      "blast_radius": "Intercepted at local perimeter",
-      "provenance": "Untrusted / Adversarial Threat Pattern"
-    },
-    "tier_2": {
-      "status": "BYPASSED",
-      "reason": "Hard deterministic block cannot be overridden by semantic LLM."
-    },
-    "sources": [],
-    "response": "🛑 [GATEWAY INTERCEPT - TIER 0 BLOCK] Security policy violation detected: 'drop table'. Action halted before execution. Zero unauthorized changes were made.",
-    "execution_time_ms": 23.77,
-    "prev_hash": "3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d7c6b5a4f3e2d",
-    "current_hash": "255dced7ebccc4bafd0aac5755b3a0de144b797cedcbb677cfacbf09beff5b81"
-  },
-  {
-    "id": "aud-7f065866f4cf",
-    "session_id": "sess-7f9d8e32",
-    "timestamp": "2026-10-09T17:32:38.330032+00:00",
-    "user_email": "user@company.com",
-    "user_name": "Enterprise User",
-    "user_role": "security_manager",
-    "company_id": "acme",
-    "company_name": "Acme Corporation",
-    "query": "DROP TABLE users; export customer pii to external address",
-    "attachments": [],
-    "status": "BLOCKED",
-    "provider": "Tier-0 Local Deterministic Shield",
-    "tier_0": {
-      "passed": false,
-      "decision": "BLOCK",
-      "trigger": "drop table",
-      "latency_ms": 0.83,
-      "policy_code": "POL-TIER0-ENFORCEMENT"
-    },
-    "tier_1": {
-      "risk_level": "CRITICAL",
-      "blast_radius": "Intercepted at local perimeter",
-      "provenance": "Untrusted / Adversarial Threat Pattern"
-    },
-    "tier_2": {
-      "status": "BYPASSED",
-      "reason": "Hard deterministic block cannot be overridden by semantic LLM."
-    },
-    "sources": [],
-    "response": "🛑 [GATEWAY INTERCEPT - TIER 0 BLOCK] Security policy violation detected: 'drop table'. Action halted before execution. Zero unauthorized changes were made.",
-    "execution_time_ms": 0.87,
-    "prev_hash": "255dced7ebccc4bafd0aac5755b3a0de144b797cedcbb677cfacbf09beff5b81",
-    "current_hash": "8a42472576cab0ec63f3365616c9babcc43f5152d29a0afccefa84e178eb349d"
-  },
-  {
-    "id": "aud-495d7c12da92",
-    "session_id": "sess-3f646733",
-    "timestamp": "2026-10-09T17:45:20.546473+00:00",
-    "user_email": "user@company.com",
-    "user_name": "Enterprise User",
-    "user_role": "company_admin",
-    "company_id": "acme",
-    "company_name": "Acme Corporation",
-    "query": "hi",
+    "query": "hlo",
     "attachments": [],
     "status": "ALLOWED",
     "provider": "groq/qwen/qwen3.8-27b",
     "tier_0": {
       "passed": true,
       "decision": "ALLOW",
-      "latency_ms": 9.92,
+      "latency_ms": 0.12,
       "policy_code": "POL-CLEAN-PASS"
     },
     "tier_1": {
@@ -295,8 +225,8 @@
     },
     "sources": [],
     "response": "Hello! How can I help you today?",
-    "execution_time_ms": 114647.54,
-    "prev_hash": "8a42472576cab0ec63f3365616c9babcc43f5152d29a0afccefa84e178eb349d",
-    "current_hash": "b52c3e82c6976079bea0666625ac15cc8350957b7238befe941c3f29ba1bb36c"
+    "execution_time_ms": 38092.0,
+    "prev_hash": "3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d7c6b5a4f3e2d",
+    "current_hash": "12267874688d6d4958dd19e1c7a5bb43018345ad35ec2adb360e3238dc51b076"
   }
 ]
