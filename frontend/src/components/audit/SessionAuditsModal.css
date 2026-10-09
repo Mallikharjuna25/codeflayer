@@ -678,8 +678,30 @@
 }
 
 @media (max-width: 768px) {
+  .audit-modal-backdrop {
+    padding: 0.5rem;
+  }
+
+  .audit-modal-card {
+    padding: 1rem 0.85rem;
+    border-radius: 16px;
+    max-height: 95vh;
+  }
+
+  .audit-modal-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .audit-header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
   .audit-stats-strip {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
   }
 
   .audit-tiers-strip {
@@ -689,10 +711,29 @@
   .audit-card-top-row {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.4rem;
   }
 
   .audit-card-footer {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .audit-hash-tag {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
+
+@media (max-width: 480px) {
+  .audit-stats-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-modal-title {
+    font-size: 1.15rem;
+  }
+}
+
