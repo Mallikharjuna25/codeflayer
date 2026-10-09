@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import CompanyLoginModal from '../auth/CompanyLoginModal';
+import { apiUrl } from '../../lib/api';
 import './Navbar.css';
 
 const ALL_PRODUCT_MODULES = [
@@ -98,7 +99,7 @@ export default function Navbar() {
     const checkHealth = async () => {
       const startTime = performance.now();
       try {
-        const res = await fetch('http://localhost:8000/health');
+        const res = await fetch(apiUrl('/health'));
         if (res.ok) {
           setIsOnline(true);
           setLatency(Math.round(performance.now() - startTime));

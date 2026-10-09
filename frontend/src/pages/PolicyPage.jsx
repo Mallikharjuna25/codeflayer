@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import SpotlightCard from '../components/reactbits/SpotlightCard';
+import { apiUrl } from '../lib/api';
 import './PolicyPage.css';
 
 const DEFAULT_SAMPLE_POLICY = `# Corporate Data Governance & Tool Access Policy
@@ -54,7 +55,7 @@ export default function PolicyPage() {
     const fetchCurrentPolicy = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch('http://localhost:8000/api/policy/current-md');
+        const res = await fetch(apiUrl('/api/policy/current-md'));
         if (res.ok) {
           const data = await res.json();
           setPolicyContent(data.content || DEFAULT_SAMPLE_POLICY);
@@ -85,7 +86,7 @@ export default function PolicyPage() {
     setSaveSuccess(null);
 
     try {
-      const res = await fetch('http://localhost:8000/api/policy/update-md', {
+      const res = await fetch(apiUrl('/api/policy/update-md'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

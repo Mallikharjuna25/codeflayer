@@ -25,6 +25,7 @@ import {
   Clock
 } from 'lucide-react';
 import SpotlightCard from '../reactbits/SpotlightCard';
+import { apiUrl } from '../../lib/api';
 
 const SAMPLE_VOICES = {
   incident: {
@@ -252,9 +253,9 @@ export default function VoiceAgentStudio({ onExtractionUpdate, onSafetyUpdate })
       const formData = new FormData();
       formData.append('file', audioBlob, fileName);
 
-      let endpoint = 'http://localhost:8000/api/voice/interact-audio';
+      let endpoint = apiUrl('/api/voice/interact-audio');
       if (voiceSubmode === 'extract') {
-        endpoint = 'http://localhost:8000/api/extract/audio';
+        endpoint = apiUrl('/api/extract/audio');
       }
 
       const res = await fetch(endpoint, {
@@ -290,7 +291,7 @@ export default function VoiceAgentStudio({ onExtractionUpdate, onSafetyUpdate })
     setInterimTranscript('');
 
     try {
-      const res = await fetch('http://localhost:8000/api/voice/agent', {
+      const res = await fetch(apiUrl('/api/voice/agent'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

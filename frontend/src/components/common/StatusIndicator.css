@@ -1,0 +1,197 @@
+.status-indicator-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: all 0.2s ease;
+  user-select: none;
+  border: 1px solid transparent;
+}
+
+/* Base Dot */
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* Spinner Icon */
+.spinner-icon {
+  animation: spinSlow 1.4s linear infinite;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Metric Chip */
+.status-metric-chip {
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+/* ================= States ================= */
+
+/* HEALTHY / CONNECTED */
+.state-healthy.status-indicator-pill {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.28);
+  color: #34d399;
+}
+.state-healthy .status-dot {
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+}
+.state-healthy .status-metric-chip {
+  background: rgba(16, 185, 129, 0.2);
+  color: #a7f3d0;
+}
+
+/* RUNNING / PROCESSING */
+.state-running.status-indicator-pill {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #60a5fa;
+}
+.state-running .status-dot {
+  background: #3b82f6;
+  box-shadow: 0 0 10px #3b82f6;
+}
+.state-running .status-metric-chip {
+  background: rgba(59, 130, 246, 0.22);
+  color: #bfdbfe;
+}
+
+/* WARNING / DEGRADED */
+.state-warning.status-indicator-pill {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+}
+.state-warning .status-dot {
+  background: #f59e0b;
+  box-shadow: 0 0 10px #f59e0b;
+}
+.state-warning .status-metric-chip {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fde68a;
+}
+
+/* ERROR / BLOCKED */
+.state-error.status-indicator-pill {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+.state-error .status-dot {
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+}
+.state-error .status-metric-chip {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fecaca;
+}
+
+/* IDLE */
+.state-idle.status-indicator-pill {
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.2);
+  color: #94a3b8;
+}
+.state-idle .status-dot {
+  background: #94a3b8;
+}
+.state-idle .status-metric-chip {
+  background: rgba(148, 163, 184, 0.16);
+  color: #cbd5e1;
+}
+
+/* OFFLINE */
+.state-offline.status-indicator-pill {
+  background: rgba(100, 116, 139, 0.1);
+  border-color: rgba(100, 116, 139, 0.25);
+  color: #64748b;
+}
+.state-offline .status-dot {
+  background: #64748b;
+}
+
+/* Pulse animation */
+.pulse-anim {
+  animation: dotPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.2);
+  }
+}
+
+/* Dot Only Variant */
+.status-indicator-dot-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.status-dot-label {
+  font-size: 0.75rem;
+  color: #cbd5e1;
+}
+
+/* Detailed Card Variant */
+.status-indicator-detailed {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.detailed-indicator-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.detailed-dot-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.detailed-info-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.detailed-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+.detailed-subtext {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  margin-top: 1px;
+}
+.detailed-metric-badge {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+}

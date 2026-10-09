@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import SpotlightCard from '../components/reactbits/SpotlightCard';
 import CountUp from '../components/reactbits/CountUp';
+import { apiUrl } from '../lib/api';
 
 export default function KnowledgePage() {
   const [chunkCount, setChunkCount] = useState(0);
@@ -25,7 +26,7 @@ export default function KnowledgePage() {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/rag/stats');
+      const res = await fetch(apiUrl('/api/rag/stats'));
       if (res.ok) {
         const data = await res.json();
         setChunkCount(data.total_chunks || 0);
@@ -43,7 +44,7 @@ export default function KnowledgePage() {
     setIsIngesting(true);
     setStatusNote('');
     try {
-      const res = await fetch('http://localhost:8000/api/rag/ingest', { method: 'POST' });
+      const res = await fetch(apiUrl('/api/rag/ingest'), { method: 'POST' });
       const data = await res.json();
       if (res.ok && data.status === 'success') {
         setStatusNote(`✅ Successfully indexed ${data.chunks_ingested} chunks into local ChromaDB!`);
@@ -65,7 +66,7 @@ export default function KnowledgePage() {
     setIsSearching(true);
     try {
       // Test search via query endpoint
-      const res = await fetch('http://localhost:8000/api/process', {
+      const res = await fetch(apiUrl('/api/process'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: searchQuery.trim() })

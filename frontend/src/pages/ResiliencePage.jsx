@@ -13,6 +13,7 @@ import {
   Cpu
 } from 'lucide-react';
 import SpotlightCard from '../components/reactbits/SpotlightCard';
+import { apiUrl } from '../lib/api';
 
 export default function ResiliencePage() {
   const [securityInput, setSecurityInput] = useState('');
@@ -31,7 +32,7 @@ export default function ResiliencePage() {
     setSecurityResult(null);
 
     try {
-      const res = await fetch('http://localhost:8000/api/safety/scan', {
+      const res = await fetch(apiUrl('/api/safety/scan'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: input.trim() })
@@ -55,7 +56,7 @@ export default function ResiliencePage() {
     } catch {
       // Fallback to /api/process if /api/safety/scan is unreachable
       try {
-        const res = await fetch('http://localhost:8000/api/process', {
+        const res = await fetch(apiUrl('/api/process'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query: input.trim() })

@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import SpotlightCard from '../components/reactbits/SpotlightCard';
 import { useAuth } from '../context/AuthContext';
+import { apiUrl } from '../lib/api';
 
 const PROMPT_SUGGESTIONS = [
   {
@@ -231,7 +232,7 @@ export default function ChatPage() {
     ]);
 
     try {
-      const response = await fetch('http://localhost:8000/api/gateway/process', {
+      const response = await fetch(apiUrl('/api/gateway/process'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

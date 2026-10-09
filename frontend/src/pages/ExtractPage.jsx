@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import SpotlightCard from '../components/reactbits/SpotlightCard';
 import VoiceAgentStudio from '../components/voice/VoiceAgentStudio';
+import { apiUrl } from '../lib/api';
 
 const SAMPLE_TEXTS = {
   project: `Project Name: HealthPulse AI Diagnostic Sentinel.
@@ -63,7 +64,7 @@ export default function ExtractPage() {
     setVoiceSafety(null);
 
     try {
-      const res = await fetch('http://localhost:8000/api/extract', {
+      const res = await fetch(apiUrl('/api/extract'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: textInput })
@@ -92,7 +93,7 @@ export default function ExtractPage() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const res = await fetch('http://localhost:8000/api/extract/image', {
+      const res = await fetch(apiUrl('/api/extract/image'), {
         method: 'POST',
         body: formData
       });

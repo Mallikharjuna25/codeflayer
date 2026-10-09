@@ -1,0 +1,231 @@
+.process-tracker-card {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  transition: all 0.3s ease;
+}
+
+.process-tracker-card.status-running {
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.12);
+}
+
+.process-tracker-card.status-completed {
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.08);
+}
+
+.process-tracker-card.status-failed {
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.08);
+}
+
+.process-tracker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.process-header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.process-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.process-spinner {
+  color: #60a5fa;
+  animation: spinSlow 1.2s linear infinite;
+}
+
+.process-success-icon {
+  color: #34d399;
+}
+
+.process-error-icon {
+  color: #f87171;
+}
+
+.process-idle-icon {
+  color: #94a3b8;
+}
+
+.process-title {
+  display: block;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.process-summary {
+  display: block;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 1px;
+}
+
+.process-meta-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.process-time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: #64748b;
+  font-family: var(--font-mono, monospace);
+}
+
+.process-status-tag {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.tag-running {
+  background: rgba(59, 130, 246, 0.16);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+}
+
+.tag-completed {
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+}
+
+.tag-failed {
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.tag-idle {
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
+}
+
+/* Steps visual track */
+.process-steps-track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px;
+}
+
+.process-step-node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.node-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.node-done .node-circle {
+  background: #10b981;
+  color: #064e3b;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.node-done .node-label {
+  color: #cbd5e1;
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.node-current .node-circle {
+  background: #3b82f6;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+  animation: pulseScale 1.5s infinite;
+}
+
+.node-spinner {
+  animation: spinSlow 1.2s linear infinite;
+}
+
+.node-current .node-label {
+  color: #60a5fa;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.node-failed .node-circle {
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+.node-failed .node-label {
+  color: #f87171;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.node-pending .node-circle {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #64748b;
+}
+
+.node-pending .node-label {
+  color: #64748b;
+  font-size: 0.76rem;
+}
+
+.process-step-connector {
+  flex: 1;
+  min-width: 16px;
+  height: 2px;
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+.conn-done {
+  background: #10b981;
+}
+
+.conn-pending {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes pulseScale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}

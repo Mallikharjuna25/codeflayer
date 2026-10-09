@@ -21,6 +21,7 @@ import {
   Copy
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { apiUrl } from '../../lib/api';
 import './SessionAuditsModal.css';
 
 export default function SessionAuditsModal({ isOpen, onClose, onLoadPrompt }) {
@@ -57,7 +58,7 @@ export default function SessionAuditsModal({ isOpen, onClose, onLoadPrompt }) {
         params.append('search', searchQuery.trim());
       }
 
-      const res = await fetch(`http://localhost:8000/api/gateway/audits?${params.toString()}`);
+      const res = await fetch(apiUrl(`/api/gateway/audits?${params.toString()}`));
       if (res.ok) {
         const data = await res.json();
         setAudits(data.audits || []);

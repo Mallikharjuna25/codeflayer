@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { apiUrl } from '../lib/api';
 
 // Default static fallback directory for offline resilience
 export const DEFAULT_COMPANIES = [
@@ -92,7 +93,7 @@ export function AuthProvider({ children }) {
   // Fetch updated company user directory from backend
   const fetchCompanies = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/auth/demo-accounts');
+      const res = await fetch(apiUrl('/api/auth/demo-accounts'));
       if (res.ok) {
         const data = await res.json();
         if (data.companies && data.companies.length > 0) {
@@ -150,7 +151,7 @@ export function AuthProvider({ children }) {
     }
 
     try {
-      const res = await fetch('http://localhost:8000/api/auth/login', {
+      const res = await fetch(apiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: cleanEmail, password: password || 'admin123' })
