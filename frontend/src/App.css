@@ -909,6 +909,118 @@
 }
 
 /* -------------------------------------------------------------------------
+   CHAT AUTH & PERMISSION SCOPE BANNER
+-------------------------------------------------------------------------- */
+.chat-auth-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 14px;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.chat-auth-banner.admin-mode {
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.12), rgba(59, 130, 246, 0.06));
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.chat-auth-banner.user-mode {
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.12), rgba(59, 130, 246, 0.06));
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.chat-auth-banner-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.chat-auth-pill {
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.76rem;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.chat-auth-pill.admin-mode {
+  background: rgba(168, 85, 247, 0.22);
+  color: #d8b4fe;
+  border: 1px solid rgba(168, 85, 247, 0.45);
+}
+
+.chat-auth-pill.user-mode {
+  background: rgba(6, 182, 212, 0.22);
+  color: #67e8f9;
+  border: 1px solid rgba(6, 182, 212, 0.45);
+}
+
+.chat-auth-user-text {
+  font-size: 0.88rem;
+  color: #f1f5f9;
+  line-height: 1.4;
+}
+
+.chat-auth-sub-desc {
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.chat-auth-banner-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.chat-auth-action-btn {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.chat-auth-action-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.chat-auth-action-btn.primary {
+  color: #d8b4fe;
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  font-weight: 600;
+}
+
+.chat-auth-action-btn.primary:hover {
+  background: rgba(168, 85, 247, 0.32);
+  border-color: rgba(168, 85, 247, 0.6);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+}
+
+/* -------------------------------------------------------------------------
    NAVBAR-STYLE UNIFIED PRODUCT HERO CARD (Exact Match to Dropdown Aesthetic)
 -------------------------------------------------------------------------- */
 .product-page-hero-card {
@@ -3686,80 +3798,22 @@
     padding: 0.6rem 0.75rem;
   }
 
-  /* Chat Auth Banner */
+  /* Chat Auth Banner Mobile Override */
   .chat-auth-banner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-  }
-  .chat-auth-banner.admin-mode {
-    background: linear-gradient(90deg, rgba(168, 85, 247, 0.14), rgba(59, 130, 246, 0.08));
-    border: 1px solid rgba(168, 85, 247, 0.3);
-  }
-  .chat-auth-banner.user-mode {
-    background: linear-gradient(90deg, rgba(6, 182, 212, 0.14), rgba(59, 130, 246, 0.08));
-    border: 1px solid rgba(6, 182, 212, 0.3);
-  }
-  .chat-auth-banner-left {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-  }
-  .chat-auth-pill {
-    padding: 0.35rem 0.65rem;
-    border-radius: 9999px;
-    font-weight: 700;
-    font-size: 0.75rem;
-  }
-  .chat-auth-pill.admin-mode {
-    background: rgba(168, 85, 247, 0.25);
-    color: #d8b4fe;
-    border: 1px solid rgba(168, 85, 247, 0.4);
-  }
-  .chat-auth-pill.user-mode {
-    background: rgba(6, 182, 212, 0.25);
-    color: #67e8f9;
-    border: 1px solid rgba(6, 182, 212, 0.4);
-  }
-  .chat-auth-user-text {
-    font-size: 0.86rem;
-    color: #f1f5f9;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.85rem 1rem;
+    gap: 0.65rem;
   }
   .chat-auth-sub-desc {
-    font-size: 0.8rem;
-    color: #94a3b8;
+    display: block;
+    margin-top: 0.2rem;
   }
   .chat-auth-banner-right {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
+    width: 100%;
+    justify-content: flex-start;
   }
-  .chat-auth-action-btn {
-    font-size: 0.78rem;
-    color: #cbd5e1;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    padding: 0.35rem 0.75rem;
-    border-radius: 8px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    transition: all 0.2s;
-  }
-  .chat-auth-action-btn.primary {
-    color: #d8b4fe;
-    background: rgba(168, 85, 247, 0.18);
-    border: 1px solid rgba(168, 85, 247, 0.35);
-    font-weight: 600;
-  }
+
 
   /* Product Page Hero Card Mobile Fit */
   .product-page-hero-card {
