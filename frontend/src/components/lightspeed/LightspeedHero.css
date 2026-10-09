@@ -1,8 +1,8 @@
 /* -------------------------------------------------------------------------
-   ECLIPSE HERO - REACT BITS PRO ECLIPSE INTEGRATION FOR HALO
+   LIGHTSPEED HERO - REACT BITS PRO LIGHTSPEED INTEGRATION FOR HALO
 -------------------------------------------------------------------------- */
 
-.eclipse-hero-container {
+.lightspeed-hero-container {
   position: relative;
   width: 100%;
   min-height: 580px;
@@ -12,7 +12,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 
     0 25px 80px -15px rgba(0, 0, 0, 0.95),
-    0 0 60px -15px rgba(6, 182, 212, 0.2);
+    0 0 60px -15px rgba(0, 240, 255, 0.2);
   overflow: hidden;
   user-select: none;
   display: flex;
@@ -21,19 +21,16 @@
   margin-bottom: 2.5rem;
 }
 
-.eclipse-canvas-layer {
+.lightspeed-canvas-layer {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-/* Centered Content Stage in front of the dark eclipse */
-.eclipse-hero-content-stage {
+/* Centered Content Stage */
+.lightspeed-hero-content-stage {
   position: relative;
   z-index: 3;
   width: 100%;
@@ -73,14 +70,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(6, 7, 13, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 9999px;
   padding: 0.22rem 0.85rem 0.22rem 0.3rem;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   margin-bottom: 1.15rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .halo-badge-tag {
@@ -110,7 +107,9 @@
   color: #ffffff;
   margin: 0;
   text-align: center;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95);
+  text-shadow: 
+    0 4px 30px rgba(0, 0, 0, 0.95),
+    0 0 60px rgba(0, 240, 255, 0.35);
 }
 
 /* Subtitle / Tagline */
@@ -134,6 +133,10 @@
   margin: 0 0 1.75rem 0;
   text-align: center;
   font-weight: 400;
+  background: rgba(6, 7, 13, 0.4);
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
 }
 
 /* CTA Buttons */
@@ -157,12 +160,12 @@
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .halo-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35);
   background: #f8fafc;
 }
 
@@ -170,31 +173,31 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(6, 7, 13, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
   font-size: 0.92rem;
   font-weight: 500;
   padding: 0.72rem 1.6rem;
   border-radius: 10px;
   cursor: pointer;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .halo-btn-secondary:hover {
   background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.35);
   transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {
-  .eclipse-hero-container {
+  .lightspeed-hero-container {
     min-height: 480px;
     height: 520px;
   }
 
-  .eclipse-hero-content-stage {
+  .lightspeed-hero-content-stage {
     padding: 1.5rem 1rem;
   }
 

@@ -28,7 +28,7 @@ import {
   Users,
   FileText
 } from 'lucide-react';
-import EclipseHero from '../components/eclipse/EclipseHero';
+import LightspeedHero from '../components/lightspeed/LightspeedHero';
 import { useAuth } from '../context/AuthContext';
 
 export default function DashboardPage() {
@@ -157,10 +157,10 @@ export default function DashboardPage() {
   return (
     <div className="apg-main-viewport">
       {/* -------------------------------------------------------------------
-          1. REACT BITS PRO ECLIPSE HERO
-             Turbulent spectral corona burning around a dark eclipsing shape
+          1. REACT BITS PRO LIGHTSPEED HERO
+             Hyperspace jump of streaking stars reacting to runtime telemetry
       -------------------------------------------------------------------- */}
-      <EclipseHero orbState={orbState} />
+      <LightspeedHero orbState={orbState} />
 
       {/* -------------------------------------------------------------------
           2. INTERACTION STATE DISPLAY
