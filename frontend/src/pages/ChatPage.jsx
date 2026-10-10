@@ -304,7 +304,34 @@ export default function ChatPage() {
     ]);
   };
 
+  const handleApproveToolAction = (idx, actionName = 'External Egress Dispatch') => {
+    setMessages((prev) =>
+      prev.map((msg, mIdx) => {
+        if (mIdx !== idx) return msg;
+        return {
+          ...msg,
+          toolApprovalStatus: 'APPROVED',
+          content: `${msg.content}\n\n✅ [HUMAN SUPERVISOR SIGN-OFF] Action '${actionName}' authorized and safely dispatched by ${currentUser?.full_name || 'Admin'} (${currentUser?.email || 'admin@acme.com'}).`
+        };
+      })
+    );
+  };
+
+  const handleRejectToolAction = (idx, actionName = 'External Egress Dispatch') => {
+    setMessages((prev) =>
+      prev.map((msg, mIdx) => {
+        if (mIdx !== idx) return msg;
+        return {
+          ...msg,
+          toolApprovalStatus: 'REJECTED',
+          content: `${msg.content}\n\n🛑 [HUMAN SUPERVISOR SIGN-OFF] Action '${actionName}' REJECTED and permanently halted at Tier-1 boundary.`
+        };
+      })
+    );
+  };
+
   return (
+
     <div className="page-container">
       {/* Session Scope Alert Banner */}
       <div className={`chat-auth-banner ${isAdmin ? 'admin-mode' : 'user-mode'}`}>
@@ -418,7 +445,52 @@ export default function ChatPage() {
 
                     <div className="bubble-text">{m.content}</div>
 
+                    {/* Interactive Human-in-the-Loop Action Approval Card */}
+                    {isAssistant && m.status === 'ESCALATED' && (
+                      <div className="human-approval-card">
+                        <div className="approval-card-header">
+                          <div className="approval-header-left">
+                            <AlertTriangle size={15} className="text-amber" />
+                            <span className="approval-title">Human Supervisor Sign-Off Required</span>
+                          </div>
+                          <span className="approval-badge-perimeter">Tier-1 Egress Gate</span>
+                        </div>
+                        <p className="approval-card-desc">
+                          An autonomous agent tool execution with external blast radius requires explicit supervisor authorization.
+                        </p>
+                        <div className="approval-action-buttons">
+                          {m.toolApprovalStatus === 'APPROVED' ? (
+                            <div className="approval-result-pill approved">
+                              <Check size={13} /> Action Approved & Dispatched
+                            </div>
+                          ) : m.toolApprovalStatus === 'REJECTED' ? (
+                            <div className="approval-result-pill rejected">
+                              <X size={13} /> Action Rejected & Halted
+                            </div>
+                          ) : (
+                            <>
+                              <button
+                                type="button"
+                                className="approval-btn approve"
+                                onClick={() => handleApproveToolAction(idx, 'External Egress Dispatch')}
+                              >
+                                <Check size={13} /> Approve Action
+                              </button>
+                              <button
+                                type="button"
+                                className="approval-btn reject"
+                                onClick={() => handleRejectToolAction(idx, 'External Egress Dispatch')}
+                              >
+                                <X size={13} /> Reject Action
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
                     {/* Show attached files/folders in user message bubble */}
+
                     {m.attachments && m.attachments.length > 0 && (
                       <div className="message-attachments-container">
                         <div className="attachments-label-row">

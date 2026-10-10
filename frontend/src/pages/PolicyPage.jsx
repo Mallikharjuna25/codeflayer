@@ -9,12 +9,14 @@ import {
   RotateCcw,
   Sparkles,
   ShieldCheck,
+  ShieldAlert,
   Eye,
   Edit3,
   Lock,
   Layers,
   ArrowRight,
-  Database
+  Database,
+  X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import SpotlightCard from '../components/reactbits/SpotlightCard';
@@ -50,6 +52,11 @@ export default function PolicyPage() {
   const [activeTab, setActiveTab] = useState('editor'); // 'editor' | 'preview'
   const [saveSuccess, setSaveSuccess] = useState(null);
 
+  // Simulation Sandbox State
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simModalOpen, setSimModalOpen] = useState(false);
+  const [simResults, setSimResults] = useState(null);
+
   // Fetch current policy markdown on mount
   useEffect(() => {
     const fetchCurrentPolicy = async () => {
@@ -74,6 +81,30 @@ export default function PolicyPage() {
 
     fetchCurrentPolicy();
   }, []);
+
+  // Dry-Run Simulation Handler
+  const handleRunSimulation = async () => {
+    setIsSimulating(true);
+    setSimModalOpen(true);
+    try {
+      const res = await fetch(apiUrl('/api/governance/simulate-policy'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          draft_policy: policyContent,
+          max_samples: 25
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSimResults(data);
+      }
+    } catch (err) {
+      console.error('Failed to run simulation:', err);
+    } finally {
+      setIsSimulating(false);
+    }
+  };
 
   // Save policy and re-index into ChromaDB
   const handleSavePolicy = async () => {
@@ -181,6 +212,15 @@ export default function PolicyPage() {
             </p>
           </div>
           <div className="product-hero-actions">
+            <button
+              onClick={handleRunSimulation}
+              disabled={isSimulating}
+              className="pill-btn-secondary"
+              title="Dry-run draft policy against test queries"
+            >
+              <Sparkles size={14} className="text-cyan" />
+              <span>{isSimulating ? 'Simulating...' : '🧪 Dry-Run Sandbox'}</span>
+            </button>
             <label className="pill-btn-secondary cursor-pointer" title="Upload local .md file">
               <Upload size={14} />
               <span>Upload .md</span>
@@ -304,6 +344,78 @@ export default function PolicyPage() {
           </div>
         </div>
       </SpotlightCard>
+
+      {/* Dry-Run Simulation Sandbox Modal */}
+      {simModalOpen && (
+        <div className="sim-modal-backdrop" onClick={() => setSimModalOpen(false)}>
+          <div className="sim-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="sim-header">
+              <div className="sim-header-title-row">
+                <Sparkles size={20} className="text-purple" />
+                <h3 className="sim-title">Policy Dry-Run Simulation Sandbox</h3>
+                <span className="sim-badge">Tier-0 Pre-Flight Test</span>
+              </div>
+              <button
+                type="button"
+                className="audit-close-btn"
+                onClick={() => setSimModalOpen(false)}
+                title="Close simulator"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {isSimulating ? (
+              <div className="policy-loading-box" style={{ padding: '3rem' }}>
+                <Sparkles size={24} className="animate-spin text-purple" />
+                <span>Running deterministic regex & AST rule evaluation against historical session queries...</span>
+              </div>
+            ) : simResults ? (
+              <>
+                <div className="sim-stats-bar">
+                  <div className="sim-stat-box">
+                    <span className="sim-stat-label">Total Queries Evaluated</span>
+                    <span className="sim-stat-number purple">{simResults.total_tested}</span>
+                  </div>
+                  <div className="sim-stat-box">
+                    <span className="sim-stat-label">🛑 Simulated Intercepts (Blocked)</span>
+                    <span className="sim-stat-number red">{simResults.blocked_count}</span>
+                  </div>
+                  <div className="sim-stat-box">
+                    <span className="sim-stat-label">🟢 Clean Passes (Allowed)</span>
+                    <span className="sim-stat-number green">{simResults.allowed_count}</span>
+                  </div>
+                </div>
+
+                <div className="sim-results-stream">
+                  <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.4rem' }}>
+                    Query Evaluation Trace:
+                  </div>
+                  {simResults.results.map((r, idx) => (
+                    <div key={idx} className="sim-row-item">
+                      <span className="sim-row-query">"{r.query}"</span>
+                      <div className="sim-row-meta">
+                        {r.simulated_trigger && (
+                          <span style={{ fontSize: '0.72rem', color: '#f87171', fontFamily: 'monospace' }}>
+                            Trigger: {r.simulated_trigger}
+                          </span>
+                        )}
+                        <span className={`sim-pill ${r.simulated_status.toLowerCase()}`}>
+                          {r.simulated_status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="policy-loading-box" style={{ padding: '2rem' }}>
+                <span>No simulation data returned.</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

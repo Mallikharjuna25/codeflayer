@@ -18,7 +18,9 @@ import {
   Layers,
   ChevronDown,
   Check,
-  Copy
+  Copy,
+  Award,
+  Printer
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { apiUrl } from '../../lib/api';
@@ -36,6 +38,11 @@ export default function SessionAuditsModal({ isOpen, onClose, onLoadPrompt }) {
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
+
+  // Compliance Certificate State
+  const [certModalOpen, setCertModalOpen] = useState(false);
+  const [certData, setCertData] = useState(null);
+  const [isGeneratingCert, setIsGeneratingCert] = useState(false);
 
   const fetchAudits = async () => {
     if (!currentUser) return;
@@ -104,6 +111,24 @@ export default function SessionAuditsModal({ isOpen, onClose, onLoadPrompt }) {
     downloadAnchor.remove();
   };
 
+  const handleViewCertificate = async () => {
+    setIsGeneratingCert(true);
+    setCertModalOpen(true);
+    try {
+      const res = await fetch(
+        apiUrl(`/api/compliance/export-certificate?user_email=${encodeURIComponent(currentUser?.email || 'admin@acme.com')}&company_id=all`)
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setCertData(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch compliance certificate:', err);
+    } finally {
+      setIsGeneratingCert(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -129,6 +154,17 @@ export default function SessionAuditsModal({ isOpen, onClose, onLoadPrompt }) {
           </div>
 
           <div className="audit-header-actions">
+            <button
+              type="button"
+              className="audit-action-btn"
+              onClick={handleViewCertificate}
+              disabled={isGeneratingCert}
+              title="View cryptographic SOC 2 / ISO 27001 AI governance certificate"
+              style={{ background: 'rgba(56, 189, 248, 0.15)', borderColor: 'rgba(56, 189, 248, 0.35)', color: '#38bdf8' }}
+            >
+              <Award size={14} />
+              <span>{isGeneratingCert ? 'Generating...' : '📜 Compliance Cert'}</span>
+            </button>
             <button
               type="button"
               className="audit-action-btn"
@@ -403,6 +439,100 @@ export default function SessionAuditsModal({ isOpen, onClose, onLoadPrompt }) {
           )}
         </div>
       </div>
+
+      {/* SOC 2 / ISO 27001 Cryptographic Compliance Certificate Modal */}
+      {certModalOpen && (
+        <div className="sim-modal-backdrop" onClick={() => setCertModalOpen(false)}>
+          <div className="cert-modal-card" onClick={(e) => e.stopPropagation()}>
+            {isGeneratingCert ? (
+              <div className="audit-empty-state" style={{ padding: '4rem' }}>
+                <RefreshCw size={28} className="animate-spin text-cyan" />
+                <p>Generating cryptographically signed audit compliance certificate...</p>
+              </div>
+            ) : certData ? (
+              <>
+                <div className="cert-paper">
+                  <div className="cert-watermark-header">
+                    <div className="cert-logo-group">
+                      <Shield size={24} className="text-cyan" />
+                      <span className="cert-org-badge">Halo 3-Tier Enterprise Agent Gateway</span>
+                    </div>
+                    <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                      Ref: <code>{certData.certificate_id}</code>
+                    </span>
+                  </div>
+
+                  <div className="cert-title-block">
+                    <h2 className="cert-main-title">Certificate of AI Governance Compliance</h2>
+                    <p className="cert-sub-title">
+                      Verified cryptographic proof of deterministic policy interception, human-in-the-loop egress containment, and zero-token cost efficiency.
+                    </p>
+                  </div>
+
+                  <div className="cert-metrics-grid">
+                    <div className="cert-metric-box">
+                      <span className="cert-metric-val">{certData.total_audited_events}</span>
+                      <span className="cert-metric-lbl">Total Audited Events</span>
+                    </div>
+                    <div className="cert-metric-box">
+                      <span className="cert-metric-val" style={{ color: '#34d399' }}>{certData.enforcement_rate}</span>
+                      <span className="cert-metric-lbl">Zero-Trust Enforcement</span>
+                    </div>
+                    <div className="cert-metric-box">
+                      <span className="cert-metric-val" style={{ color: '#fbbf24' }}>{certData.blocked_intercepts}</span>
+                      <span className="cert-metric-lbl">Tier-0 Intercepts</span>
+                    </div>
+                  </div>
+
+                  <div className="cert-standards-list">
+                    <div style={{ fontSize: '0.76rem', fontWeight: 700, color: '#34d399', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Certified Framework Attestations:
+                    </div>
+                    {certData.compliance_standards?.map((std, sIdx) => (
+                      <div key={sIdx} className="cert-standard-item">
+                        <Check size={14} className="text-emerald" />
+                        <span>{std}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="cert-crypto-seal">
+                    <div>
+                      <div style={{ fontWeight: 600, color: '#f1f5f9', marginBottom: '0.2rem' }}>
+                        Issuer: {certData.issued_by}
+                      </div>
+                      <div>Authorized Recipient: <code>{certData.issued_to_email}</code></div>
+                    </div>
+
+                    <div className="cert-hash-box">
+                      <div>Genesis Hash: {certData.merkle_genesis_hash}</div>
+                      <div>Current Chain Hash: {certData.merkle_head_hash}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="cert-actions-bar">
+                  <button
+                    type="button"
+                    className="pill-btn-secondary"
+                    onClick={() => window.print()}
+                  >
+                    <Printer size={14} />
+                    <span>Print Certificate</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="pill-btn-primary"
+                    onClick={() => setCertModalOpen(false)}
+                  >
+                    <span>Done</span>
+                  </button>
+                </div>
+              </>
+            ) : null}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

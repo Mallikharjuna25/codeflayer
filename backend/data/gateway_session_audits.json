@@ -192,7 +192,74 @@
     ],
     "response": "ChromaDB vector vault is active with 12 verified knowledge chunks indexed. All embedding queries are grounded against verified guidelines with cosine distance threshold <= 0.75.",
     "execution_time_ms": 19.4,
-    "prev_hash": "9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e",
-    "current_hash": "3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b1a0f9e8d7c6b5a4f3e2d"
+    "prev_hash": "9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e"
+  },
+  {
+    "id": "aud-695a8b25166c",
+    "session_id": "sess-a6cd54ec",
+    "timestamp": "2026-10-09T23:27:35.277747+00:00",
+    "user_email": "user@company.com",
+    "user_name": "Enterprise User",
+    "user_role": "company_admin",
+    "company_id": "acme",
+    "company_name": "Acme Corporation",
+    "query": "hi",
+    "attachments": [],
+    "status": "ALLOWED",
+    "provider": "groq/qwen/qwen3.8-27b",
+    "tier_0": {
+      "passed": true,
+      "decision": "ALLOW",
+      "latency_ms": 26.72,
+      "policy_code": "POL-CLEAN-PASS"
+    },
+    "tier_1": {
+      "risk_level": "LOW",
+      "blast_radius": "Read-only isolated local context",
+      "provenance": "Verified Internal Role: company_admin"
+    },
+    "tier_2": {
+      "status": "SYNTHESIZED",
+      "provider": "groq/qwen/qwen3.8-27b"
+    },
+    "sources": [],
+    "response": "Hello! How can I help you today?",
+    "execution_time_ms": 2488.21,
+    "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "current_hash": "7610ad8f40c5a6d7c2d1c0d082f0cecee06dc78968e4c5de95e24d9ef7fdca65"
+  },
+  {
+    "id": "aud-554477eb64f6",
+    "session_id": "sess-d1911242",
+    "timestamp": "2026-10-09T23:30:48.418607+00:00",
+    "user_email": "user@company.com",
+    "user_name": "Enterprise User",
+    "user_role": "company_admin",
+    "company_id": "acme",
+    "company_name": "Acme Corporation",
+    "query": "hlo",
+    "attachments": [],
+    "status": "ALLOWED",
+    "provider": "groq/qwen/qwen3.8-27b",
+    "tier_0": {
+      "passed": true,
+      "decision": "ALLOW",
+      "latency_ms": 0.3,
+      "policy_code": "POL-CLEAN-PASS"
+    },
+    "tier_1": {
+      "risk_level": "LOW",
+      "blast_radius": "Read-only isolated local context",
+      "provenance": "Verified Internal Role: company_admin"
+    },
+    "tier_2": {
+      "status": "SYNTHESIZED",
+      "provider": "groq/qwen/qwen3.8-27b"
+    },
+    "sources": [],
+    "response": "Hello! How can I help you today?",
+    "execution_time_ms": 1289.87,
+    "prev_hash": "7610ad8f40c5a6d7c2d1c0d082f0cecee06dc78968e4c5de95e24d9ef7fdca65",
+    "current_hash": "04c7bc551fa17f404131dcd2d4db4b75d46dc5c48a4bdb3bb89ff84f038bc14f"
   }
 ]
